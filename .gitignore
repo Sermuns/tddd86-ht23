@@ -10,6 +10,28 @@
 *.dll
 *.dylib
 
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
 # Qt-es
 object_script.*.Release
 object_script.*.Debug
