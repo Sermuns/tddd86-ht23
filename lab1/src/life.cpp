@@ -102,11 +102,11 @@ int main() {
     printGrid(lifeGrid);
     string optionsText = "a)nimate, t)ick, q)uit? ";
     int sleepLength = 100;
-    char chosenOption;
+    string chosenOption;
     while (playing) {
-        cout << optionsText;
+        cout << optionsText << endl;
         cin >> chosenOption;
-        switch (chosenOption) {
+        switch (chosenOption.at(0)) {
         case 'a':
             while (true) {
             pause(sleepLength);
@@ -122,8 +122,10 @@ int main() {
         case 'q':
             playing = false;
         break;
+        default:
+            cout << "Invalid input!" << endl;
+            break;
         }
-        clearConsole();
         printGrid(lifeGrid);
     }
 
