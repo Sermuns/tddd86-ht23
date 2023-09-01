@@ -20,8 +20,11 @@ void printWelcomeMessage() {
     cout << "- A cell with 4 or more neighbours dies.\n";
 }
 
-Grid<char> createGrid(){
-    ifstream inputGrid("simple.txt");
+Grid<char> createGrid(const string &fileName){
+
+    //Just don't do it wrong!!
+
+    ifstream inputGrid(fileName);
     string line;
     int row, column;
     getline(inputGrid, line);
@@ -58,15 +61,73 @@ void printGrid(const Grid<char> &grid){
     }
 }
 
-void advanceGeneration(Grid<char> &grid){
+int getNeighbours(const Grid<char> &grid, const int yCoord, const int xCoord){
 
+    int neighbourAmount = 0;
+    for(int y = (yCoord -1); y <= (yCoord + 1); y++){
+        for(int x = (xCoord - 1); x <= (xCoord + 1);x++){
+            bool notSelf = !(xCoord == x && yCoord == y);
+            if(grid.inBounds(y,x) && notSelf){
+                if(grid.get(y,x) == 'X'){
+                    neighbourAmount++;
+                }
+            }
+        }
+    }
+    return neighbourAmount;
 }
 
+void advanceGeneration(Grid<char> &grid){
+    Grid<char> gridClone = grid;
+    for(int y = 0; y < gridClone.numRows(); y++){
+        for(int x = 0; x < gridClone.numCols(); x++){
+            int neighbourAmount = getNeighbours(grid,y,x);
+             if(neighbourAmount == 3){
+                 gridClone.set(y, x, 'X');
+             }
+             else if(neighbourAmount < 2 || neighbourAmount > 3){
+                 gridClone.set(y, x, '-');
+             }
+        }
+  }
+    grid = gridClone;
+}
+
+
 int main() {
+    bool playing = true;
     printWelcomeMessage();
- // promptForFileName();
-    Grid<char> lifeGrid = createGrid();
+    string fileName = promptForFileName();
+    Grid<char> lifeGrid = createGrid(fileName);
     printGrid(lifeGrid);
+    string optionsText = "a)nimate, t)ick, q)uit? ";
+    int sleepLength = 100;
+    char chosenOption;
+    while (playing) {
+        cout << optionsText;
+        cin >> chosenOption;
+        switch (chosenOption) {
+        case 'a':
+            while (true) {
+            pause(sleepLength);
+            advanceGeneration(lifeGrid);
+            clearConsole();
+            printGrid(lifeGrid);
+            }
+        break;
+        case 't':
+            advanceGeneration(lifeGrid);
+        break;
+
+        case 'q':
+            playing = false;
+        break;
+        }
+        clearConsole();
+        printGrid(lifeGrid);
+    }
+
     cout << "Have a nice Life! "  << endl;
     return 0;
 }
+
