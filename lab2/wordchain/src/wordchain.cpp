@@ -14,8 +14,15 @@ int main() {
     cout << endl;
 
     cout << "Please type two words: ";
+    string bothWords;
+    getline(std::cin, bothWords);
 
-    // TODO: Finish the program!
+    size_t posOfFirstSpace = bothWords.find_first_of(' ');
+
+    string firstWord = bothWords.substr(0, posOfFirstSpace);
+    string secondWord = bothWords.substr(posOfFirstSpace+1);
+
+    cout << firstWord << secondWord << endl;
 
     return 0;
 }
