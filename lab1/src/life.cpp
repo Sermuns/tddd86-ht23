@@ -1,6 +1,5 @@
 // This is the CPP file you will edit and turn in.
-// Also remove these comments here and add your own.
-// TODO: remove this comment header
+// Made by Daniel Alchasov(danal315) & Samuel Åkesson(samak519).
 
 #include <iostream>
 #include <string>
@@ -10,6 +9,9 @@
 
 using namespace std;
 
+/**
+ * Print a bunch of welcome text.
+ */
 void printWelcomeMessage() {
     cout << "Welcome to the TDDD86 Game of Life,\n";
     cout << "a simulation of the lifecycle of a bacteria colony.\n";
@@ -20,6 +22,11 @@ void printWelcomeMessage() {
     cout << "- A cell with 4 or more neighbours dies.\n\n";
 }
 
+/**
+ * @brief Construct a grid using filename to a .txt file
+ * @param fileName
+ * @return a grid object
+ */
 Grid<char> createGrid(const string &fileName){
     ifstream inputGrid(fileName);
     string line;
@@ -45,6 +52,10 @@ Grid<char> createGrid(const string &fileName){
     return lifeGrid;
 }
 
+/**
+ * @brief promptForFileName asks for which grid should be used
+ * @return string of filename.
+ */
 string promptForFileName(){
     cout << "Grid input file name? ";
     string filename;
@@ -53,6 +64,10 @@ string promptForFileName(){
     return filename;
 }
 
+/**
+ * @brief printGrid prints the given .txt files grid as a string
+ * @param grid.
+ */
 void printGrid(const Grid<char> &grid){
     for(int y = 0; y < grid.numRows(); y++){
         for(int x = 0; x < grid.numCols(); x++){
@@ -62,6 +77,13 @@ void printGrid(const Grid<char> &grid){
     }
 }
 
+/**
+ * @brief getNeighbours, gets neighbours for a given cell by checking its surroundings.
+ * @param grid
+ * @param yCoord
+ * @param xCoord
+ * @return amount of infected cells at given coord.
+ */
 int getNeighbours(const Grid<char> &grid, const int yCoord, const int xCoord){
     int neighbourAmount = 0;
     for(int y = (yCoord -1); y <= (yCoord + 1); y++){
@@ -74,7 +96,10 @@ int getNeighbours(const Grid<char> &grid, const int yCoord, const int xCoord){
     }
     return neighbourAmount;
 }
-
+/**
+ * @brief advanceGeneration advances the given grid based on the given rules the game follows
+ * @param grid
+ */
 void advanceGeneration(Grid<char> &grid){
     Grid<char> gridClone = grid;
     for(int y = 0; y < gridClone.numRows(); y++){
@@ -90,8 +115,10 @@ void advanceGeneration(Grid<char> &grid){
     }
     grid = gridClone;
 }
-
-
+/**
+ * @brief main plays the game of life.
+ * @return 0
+ */
 int main() {
     bool playing = true;
     printWelcomeMessage();
@@ -106,7 +133,7 @@ int main() {
 
         switch (chosenOption.at(0)) {
         case 'a':
-            while (true) {
+            for(int i=0; i<50;i++) {
                 pause(SLEEP_LENGTH);
                 advanceGeneration(lifeGrid);
                 clearConsole();
