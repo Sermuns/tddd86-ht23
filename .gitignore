@@ -54,6 +54,7 @@ Makefile*
 *.qm
 *.prl
 *.vscode*
+*.qmake.stash*
 
 # Qt unit tests
 target_wrapper.*
