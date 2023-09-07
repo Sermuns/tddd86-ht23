@@ -2,13 +2,15 @@
 #include <fstream>
 #include <string>
 #include <unordered_set>
+#include <map>
+
 using namespace std;
 
 const string ALPHABET = "abcdefghijklmnopqrstuvwxyz";
 
 unordered_set<string> getAllWords() {
     unordered_set<string> allWords;
-    ifstream dictionary("dictionary.txt");
+    ifstream dictionary("lab2/evilhangman/res/di.txt");
     string line;
     while (getline(dictionary, line)) {
         allWords.insert(line);
@@ -113,8 +115,7 @@ void printWelcomeMessages(const int maxWordLength, unordered_set<string> &correc
     cout << "Welcome to Hangman." << endl;
     bool incorrect = true; // reversed logical boolean.
     int wordLength;
-    const int maxWordLength = getMaxWordLength();
-    while(incorrect){
+    while (incorrect) {
         cout << "Input desired word length: ";
         string line;
         getline(cin, line);
@@ -123,24 +124,42 @@ void printWelcomeMessages(const int maxWordLength, unordered_set<string> &correc
             incorrect = false;
         }
     }
+
+    correctLengthWords = getWordsOfDesiredLength(wordLength);
+
     cout << "Input the amount of guesses you want that is larger than 0: ";
     int guessAmount;
     cin >> guessAmount;
     cout << "Want a hint??? (yes/no)" << endl;
-    unordered_set<string> correctLengthWords = getWordsOfDesiredLength(wordLength);
     string answer = "yes";
     if (answer == "yes") {
         cout << "The amount of words that are left: " << correctLengthWords.size() << endl;
     }
+}
+
+bool useHint = false;
+
+int main() {
+    const int maxWordLength = getMaxWordLength();
+    unordered_set<string> correctLengthWords;
+
+    printWelcomeMessages(maxWordLength, correctLengthWords);
 
     unordered_set<char> guessedCharacters;
-    while(true){
-        cout << "Guesses left: " << guessAmount << endl;
-
-        cout << "Guess a letter! " <<  endl;
+    map<string, unordered_set<string>> wordFamilies;
+    while (true) {
+        cout << "Guess now: " << endl;
         char letter;
         cin >> letter;
+
         guessedCharacters.insert(letter);
+        wordFamilies = createWordFamilyMap(correctLengthWords, letter);
+
+        removeSmallFamilies(wordFamilies);
+
+        for(const auto& stuff : wordFamilies){
+            cout << stuff.first << " ||| " << (stuff.second.size()) << endl;
+        }
     }
     return 0;
 }
