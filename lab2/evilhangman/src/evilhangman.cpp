@@ -4,13 +4,13 @@
 #include <unordered_set>
 using namespace std;
 
-const string ALPHABET  = "abcdefghijklmnopqrstuvwxyz";
+const string ALPHABET = "abcdefghijklmnopqrstuvwxyz";
 
-unordered_set<string> getAllWords(){
+unordered_set<string> getAllWords() {
     unordered_set<string> allWords;
     ifstream dictionary("dictionary.txt");
     string line;
-    while(getline(dictionary, line)){
+    while (getline(dictionary, line)) {
         allWords.insert(line);
     }
     dictionary.close();
@@ -19,33 +19,39 @@ unordered_set<string> getAllWords(){
 
 const unordered_set<string> allWords = getAllWords();
 
-int getMaxWordLength(){
+int getMaxWordLength() {
     int maxLength = 0;
-    for(const auto& word: allWords){
+    for (const auto &word: allWords) {
         int wordLength = static_cast<int>(word.length());
-        if(wordLength > maxLength){
+        if (wordLength > maxLength) {
             maxLength = wordLength;
         }
     }
     return maxLength;
 }
 
-unordered_set<string> getWordsOfDesiredLength(const int length){
+unordered_set<string> getWordsOfDesiredLength(const int length) {
     unordered_set<string> words;
-    for(const auto& word: allWords){
-        if(static_cast<int>(word.length()) == length){
+    for (const auto &word: allWords) {
+        if (static_cast<int>(word.length()) == length) {
             words.insert(word);
         }
     }
     return words;
 }
 
-unordered_set<string> getWordsWithoutLetters(const unordered_set<string> &words, const unordered_set<char> &letters){
+/**
+ * Returns a filtered copy of input words which doesn't contain any of the chars in input letters
+ * @param words words to be filtererd
+ * @param letters letters that aren't allowed
+ * @return
+ */
+unordered_set<string> getWordsWithoutLetters(const unordered_set<string> &words, const unordered_set<char> &letters) {
     unordered_set<string> filtered;
-    for(const auto& word: words){
-        for(const auto& letter: letters){
+    for (const auto &word: words) {
+        for (const auto &letter: letters) {
             // checks if current letter does exist in word!
-            if(word.find(letter) != string::npos){
+            if (word.find(letter) != string::npos) {
                 filtered.insert(word);
             }
         }
@@ -53,15 +59,57 @@ unordered_set<string> getWordsWithoutLetters(const unordered_set<string> &words,
     return filtered;
 }
 
-unordered_set<string> returnPossibleAnswers(const unordered_set<string> &possibleWords, const unordered_set<char> &currentGuesses){
-    unordered_set<string> currentPossibleAnswers = getWordsWithoutLetters(possibleWords, currentGuesses);
-    if(currentPossibleAnswers.size() <= 0){
-        //oopsie
+/**
+ * Takes a wordFamilies map and limits it based on input letter
+ * @param wordFamilies
+ * @param guessedLetter
+ */
+map<string, unordered_set<string >> createWordFamilyMap(const unordered_set<string> &currentWords, char guessedLetter) {
+    map<string, unordered_set<string>> wordFamilies;
+    for (const auto &word: currentWords) {
+        string pattern = word;
+        // add '-' where unknown letter
+        for (char &letter: pattern) {
+            if (letter != guessedLetter) {
+                letter = '-';
+            }
+        }
 
+        // if pattern already exists as key!
+        if (wordFamilies.count(pattern) > 0) {
+            wordFamilies[pattern].insert(word);
+        }
+        // if key needs to be created!
+        else {
+            wordFamilies[pattern] = unordered_set<string>({word});
+        }
     }
-    return currentPossibleAnswers;
+
+    return wordFamilies;
 }
-int main() {
+
+
+void removeSmallFamilies(map<string, unordered_set<string>> &wordFamilies){
+    int largestValueSize = 0;
+    unordered_set<string> largestValue;
+    string largestKey;
+    unordered_set<string> currValue;
+    for(const auto& pair : wordFamilies){
+        currValue = pair.second;
+        int valueSize = static_cast<int>(currValue.size());
+        if(valueSize > largestValueSize) {
+            largestValueSize = valueSize;
+            largestKey = pair.first;
+            largestValue = pair.second;
+        }
+    }
+    wordFamilies.clear();
+    wordFamilies[largestKey] =  (largestValue);
+
+}
+
+
+void printWelcomeMessages(const int maxWordLength, unordered_set<string> &correctLengthWords) {
     cout << "Welcome to Hangman." << endl;
     bool incorrect = true; // reversed logical boolean.
     int wordLength;
@@ -71,8 +119,7 @@ int main() {
         string line;
         getline(cin, line);
         wordLength = stoi(line);
-        if(wordLength <= maxWordLength)
-        {
+        if (wordLength <= maxWordLength) {
             incorrect = false;
         }
     }
@@ -82,7 +129,7 @@ int main() {
     cout << "Want a hint??? (yes/no)" << endl;
     unordered_set<string> correctLengthWords = getWordsOfDesiredLength(wordLength);
     string answer = "yes";
-    if(answer == "yes"){
+    if (answer == "yes") {
         cout << "The amount of words that are left: " << correctLengthWords.size() << endl;
     }
 
