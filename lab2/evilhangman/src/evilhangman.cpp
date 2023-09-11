@@ -1,9 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <list>
 #include <unordered_set>
 #include <unordered_map>
-#include <list>
 
 using namespace std;
 
@@ -11,7 +11,7 @@ const string ALPHABET = "abcdefghijklmnopqrstuvwxyz";
 
 unordered_set<string> getAllWords() {
     unordered_set<string> allWords;
-    ifstream dictionary("lab2/evilhangman/res/di.txt");
+    ifstream dictionary("lab2/evilhangman/res/dictionary.txt");
     string line;
     while (getline(dictionary, line)) {
         allWords.insert(line);
@@ -43,145 +43,59 @@ unordered_set<string> getWordsOfDesiredLength(const int length) {
     return words;
 }
 
-/**
- * Returns a filtered copy of input words which doesn't contain any of the chars in input letters
- * @param words words to be filtererd
- * @param letters letters that aren't allowed
- * @return
- */
-unordered_set<string> getWordsWithoutLetters(const unordered_set<string> &words, const unordered_set<char> &letters) {
-    unordered_set<string> filtered;
-    for (const auto &word: words) {
-        for (const auto &letter: letters) {
-            // checks if current letter does exist in word!
-            if (word.find(letter) != string::npos) {
-                filtered.insert(word);
-            }
-        }
-    }
-    return filtered;
-}
-
-
-/**
- * Takes a wordFamilies map and limits it based on input letter
- * @param wordFamilies
- * @param guessedLetter
- */
-unordered_map<string, unordered_set<string >> createWordFamilyMap(const unordered_set<string> &currentWords, list<char> &guessedCharacters) {
+void createWordFamily(char guessedLetter, pair<string, unordered_set<string>> &largestPair){
     unordered_map<string, unordered_set<string>> wordFamilies;
-    char guessedLetter = guessedCharacters.front();
-    for (const auto &word: currentWords) {
+    for(const auto& word: largestPair.second){
         string pattern = word;
-        // add '-' where unknown letter
-        for (int i= 0; i < pattern.size(); i++) {
-            bool found = false;
-            for(char &guessedChar : guessedCharacters){
-                if(pattern[i] == guessedChar){
-                    found = true;
-                    break;
-                }
-            }
-            if(!found){
+        for(int i= 0;i<word.size() ; i++){
+            if(word.at(i) != guessedLetter && largestPair.first.at(i) == '-'){
                 pattern[i] = '-';
             }
         }
 
-        // if pattern already exists as key!
+        // key already exists
         if (wordFamilies.count(pattern) > 0) {
             wordFamilies[pattern].insert(word);
         }
-        // if key needs to be created!
+        // key needs to be created!
         else {
             wordFamilies[pattern] = unordered_set<string>({word});
         }
+
     }
-
-    return wordFamilies;
-}
-
-
-void removeSmallFamilies(unordered_map<string, unordered_set<string>> &wordFamilies){
-    int largestValueSize = 0;
-    unordered_set<string> largestValue;
-    string largestKey;
-    unordered_set<string> currValue;
+    pair<string, unordered_set<string>> largestWordFamily;
     for(const auto& pair : wordFamilies){
-        currValue = pair.second;
-        int valueSize = static_cast<int>(currValue.size());
-        if(valueSize > largestValueSize) {
-            largestValueSize = valueSize;
-            largestKey = pair.first;
-            largestValue = pair.second;
+        if(pair.second.size() > largestWordFamily.second.size()){
+            largestWordFamily = pair;
         }
     }
-    wordFamilies.clear();
-    wordFamilies[largestKey] =  (largestValue);
+    largestPair = largestWordFamily;
 }
-
-
-void printWelcomeMessages(const int maxWordLength, unordered_set<string> &correctLengthWords) {
-    cout << "Welcome to Hangman." << endl;
-    bool incorrect = true; // reversed logical boolean.
-    int wordLength;
-    while (incorrect) {
-        cout << "Input desired word length: ";
-        string line;
-        getline(cin, line);
-        wordLength = stoi(line);
-        if (wordLength <= maxWordLength) {
-            incorrect = false;
-        }
-    }
-
-    correctLengthWords = getWordsOfDesiredLength(wordLength);
-
-    cout << "Input the amount of guesses you want that is larger than 0: ";
-    int guessAmount;
-    cin >> guessAmount;
-    cout << "Want a hint??? (yes/no)" << endl;
-    string answer = "yes";
-    if (answer == "yes") {
-        cout << "The amount of words that are left: " << correctLengthWords.size() << endl;
-    }
-}
-
-void modifyPossibleWords(unordered_set<string> &possibleWords, const list<char> &guessedCharacters){
-    char latestLetter = guessedCharacters.front();
-    unordered_set<string> tempSet = possibleWords;
-    for(const auto& words : possibleWords){
-        for(int i = 0; i < words.size(); i++){
-            if(words.at(i) == latestLetter){
-                tempSet.erase(words);
-            }
-        }
-    }
-    possibleWords = tempSet;
-}
-
-bool useHint = false;
 
 int main() {
-    const int maxWordLength = getMaxWordLength();
-    unordered_set<string> possibleWords;
+    int desiredLength = 4;
+    const unordered_set<string> possibleWords = getWordsOfDesiredLength(desiredLength);
+    const list<char> guessedLetters = {'o', 'e', 'h', 'a', 'l', 'd', 's', 'q', 'w', 'i', 'b'};
+    const string firstPattern(desiredLength, '-');
+    pair<string, unordered_set<string>> largestPair(firstPattern, possibleWords);
 
-    printWelcomeMessages(maxWordLength, possibleWords);
+    for(const auto& letter: ALPHABET){
 
-    list<char> guessedCharacters;
-    unordered_map<string, unordered_set<string>> wordFamilies;
-    while (true) {
-        cout << "Guess now: " << endl;
-        char letter;
-        cin >> letter;
 
-        guessedCharacters.push_front(letter);
-        wordFamilies = createWordFamilyMap(possibleWords, guessedCharacters);
-        removeSmallFamilies(wordFamilies);
-        modifyPossibleWords(possibleWords, guessedCharacters);
+        cout << "current guess: " << letter << endl;
+        createWordFamily(letter, largestPair);
+       cout << largestPair.first << " " << largestPair.second.size() << endl;
 
-        for(const auto& stuff : wordFamilies){
-            cout << stuff.first << " ||| " << (stuff.second.size()) << endl;
-        }
+       if(largestPair.first.find('-') == string::npos){
+           cout << "U WON BRO" << endl;
+           break;
+       }
+
+//       for(const auto& worrrrrd : largestPair.second){
+//           cout << worrrrrd << " ";
+//       }
     }
+
+
     return 0;
 }
