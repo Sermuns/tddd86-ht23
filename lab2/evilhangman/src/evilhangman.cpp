@@ -2,7 +2,8 @@
 #include <fstream>
 #include <string>
 #include <unordered_set>
-#include <map>
+#include <unordered_map>
+#include <list>
 
 using namespace std;
 
@@ -145,6 +146,19 @@ void printWelcomeMessages(const int maxWordLength, unordered_set<string> &correc
     }
 }
 
+void modifyPossibleWords(unordered_set<string> &possibleWords, const list<char> &guessedCharacters){
+    char latestLetter = guessedCharacters.front();
+    unordered_set<string> tempSet = possibleWords;
+    for(const auto& words : possibleWords){
+        for(int i = 0; i < words.size(); i++){
+            if(words.at(i) == latestLetter){
+                tempSet.erase(words);
+            }
+        }
+    }
+    possibleWords = tempSet;
+}
+
 bool useHint = false;
 
 int main() {
@@ -160,9 +174,8 @@ int main() {
         char letter;
         cin >> letter;
 
-        guessedCharacters.insert(letter);
-        wordFamilies = createWordFamilyMap(correctLengthWords, letter);
-
+        guessedCharacters.push_front(letter);
+        wordFamilies = createWordFamilyMap(possibleWords, guessedCharacters);
         removeSmallFamilies(wordFamilies);
         modifyPossibleWords(possibleWords, guessedCharacters);
 
