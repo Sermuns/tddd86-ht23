@@ -61,19 +61,28 @@ unordered_set<string> getWordsWithoutLetters(const unordered_set<string> &words,
     return filtered;
 }
 
+
 /**
  * Takes a wordFamilies map and limits it based on input letter
  * @param wordFamilies
  * @param guessedLetter
  */
-map<string, unordered_set<string >> createWordFamilyMap(const unordered_set<string> &currentWords, char guessedLetter) {
-    map<string, unordered_set<string>> wordFamilies;
+unordered_map<string, unordered_set<string >> createWordFamilyMap(const unordered_set<string> &currentWords, list<char> &guessedCharacters) {
+    unordered_map<string, unordered_set<string>> wordFamilies;
+    char guessedLetter = guessedCharacters.front();
     for (const auto &word: currentWords) {
         string pattern = word;
         // add '-' where unknown letter
-        for (char &letter: pattern) {
-            if (letter != guessedLetter) {
-                letter = '-';
+        for (int i= 0; i < pattern.size(); i++) {
+            bool found = false;
+            for(char &guessedChar : guessedCharacters){
+                if(pattern[i] == guessedChar){
+                    found = true;
+                    break;
+                }
+            }
+            if(!found){
+                pattern[i] = '-';
             }
         }
 
@@ -91,7 +100,7 @@ map<string, unordered_set<string >> createWordFamilyMap(const unordered_set<stri
 }
 
 
-void removeSmallFamilies(map<string, unordered_set<string>> &wordFamilies){
+void removeSmallFamilies(unordered_map<string, unordered_set<string>> &wordFamilies){
     int largestValueSize = 0;
     unordered_set<string> largestValue;
     string largestKey;
@@ -107,7 +116,6 @@ void removeSmallFamilies(map<string, unordered_set<string>> &wordFamilies){
     }
     wordFamilies.clear();
     wordFamilies[largestKey] =  (largestValue);
-
 }
 
 
@@ -141,12 +149,12 @@ bool useHint = false;
 
 int main() {
     const int maxWordLength = getMaxWordLength();
-    unordered_set<string> correctLengthWords;
+    unordered_set<string> possibleWords;
 
-    printWelcomeMessages(maxWordLength, correctLengthWords);
+    printWelcomeMessages(maxWordLength, possibleWords);
 
-    unordered_set<char> guessedCharacters;
-    map<string, unordered_set<string>> wordFamilies;
+    list<char> guessedCharacters;
+    unordered_map<string, unordered_set<string>> wordFamilies;
     while (true) {
         cout << "Guess now: " << endl;
         char letter;
@@ -156,6 +164,7 @@ int main() {
         wordFamilies = createWordFamilyMap(correctLengthWords, letter);
 
         removeSmallFamilies(wordFamilies);
+        modifyPossibleWords(possibleWords, guessedCharacters);
 
         for(const auto& stuff : wordFamilies){
             cout << stuff.first << " ||| " << (stuff.second.size()) << endl;
