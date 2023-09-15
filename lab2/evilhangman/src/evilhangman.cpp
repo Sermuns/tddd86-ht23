@@ -80,6 +80,7 @@ void daFluff(int &guessesAllowed, int& wordLength, bool &hint){
     string tempAnswer;
     cout << "Continue with hints (y/n)? ";
     getline(cin, tempAnswer);
+
     if (tempAnswer == "y"){
         hint = true;
     }
@@ -90,24 +91,47 @@ int main() {
     int guessAmount;
     int desiredLength;
     bool hint = false;
+    bool game = true;
     daFluff(guessAmount, desiredLength, hint);
-
+    unordered_set<char> guessedLetters;
     const unordered_set<string> possibleWords = getWordsOfDesiredLength(desiredLength);
-    const list<char> guessedLetters = {'o', 'e', 'h', 'a', 'l', 'd', 's', 'q', 'w', 'i', 'b'};
     const string firstPattern(desiredLength, '-');
     pair<string, unordered_set<string>> largestPair(firstPattern, possibleWords);
 
-    for(const auto& letter: ALPHABET){
+    while(guessAmount > 0){
+        cout << "guess a letter!";
+
+        char letter;
+        cin >> letter;
+        guessedLetters.insert(letter);
+        cout << guessedLetters.count(letter) << endl;
+        //if there are now more than 2 instances of letter then another guess is needed
+        for(int i = 1; i < guessedLetters.count(letter); i++ ){
+            cout << "Already guessed this letter: " << letter << endl;
+            cout << "Guess again: ";
+            cin >> letter;
+        }
 
 
         cout << "current guess: " << letter << endl;
         createWordFamily(letter, largestPair);
-       cout << largestPair.first << " " << largestPair.second.size() << endl;
+        if(hint){
+            cout << largestPair.first << " " << largestPair.second.size() << endl;
+        }
+        else{
+            cout << largestPair.first << endl;
+        }
 
-       if(largestPair.first.find('-') == string::npos){
-           cout << "U WON BRO" << endl;
-           break;
-       }
+        if(largestPair.first.find('-') == string::npos){
+            cout << "U WON BRO" << endl;
+            break;
+        }
+        guessAmount--;
+    }
+    for(const auto& letter: ALPHABET){
+
+
+
 
 //       for(const auto& worrrrrd : largestPair.second){
 //           cout << worrrrrd << " ";
