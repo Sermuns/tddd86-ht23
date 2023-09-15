@@ -1,3 +1,7 @@
+/*Takes two words as input and tries to convert the 2nd word into the 1st by chaining valid words between them till you get the 1st word.
+ * made by Daniel Alchasov(Danal315) Samuel Åkesson(Samak519).
+ *
+ */
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -6,7 +10,10 @@
 #include <unordered_set>
 using namespace std;
 
-
+/**
+ * @brief getAllWords gets all lines of words in a given .txt file.
+ * @return a unordered set of all the words in given .txt file.
+ */
 unordered_set<string> getAllWords(){
     unordered_set<string> allWords;
     ifstream dictionary("dictionary.txt");
@@ -17,15 +24,22 @@ unordered_set<string> getAllWords(){
     dictionary.close();
     return allWords;
 }
-const unordered_set<string> allWords = getAllWords();
 const string ALPHABET  = "abcdefghijklmnopqrstuvwxyz";
 
-
-bool isValidWord(const string &word){
+/**
+ * @brief isValidWord checks if given word exists in our dictionary
+ * @param word
+ * @return a bool if it exists or not.
+ */
+bool isValidWord(const string &word, const unordered_set<string> &allWords){
     return allWords.count(word) > 0;
 }
-
-queue<string> getNeighbors(const string &word){
+/**
+ * @brief getNeighbors gets a queue of words that are neighbours and in the dictionary
+ * @param word
+ * @return queue of stings of neighbours.
+ */
+queue<string> getNeighbors(const string &word, const unordered_set<string> &allWords){
     queue<string> validNeighbors;
     string potentialNeighbor;
     for(int i = 0; i < static_cast<int>(word.length()); i++){
@@ -33,7 +47,7 @@ queue<string> getNeighbors(const string &word){
             potentialNeighbor = word;
             char letter = ALPHABET.at(j);
             potentialNeighbor[i] = letter;
-            if(isValidWord(potentialNeighbor) && !(potentialNeighbor == word)){
+            if(isValidWord(potentialNeighbor, allWords) && !(potentialNeighbor == word)){
                 validNeighbors.push(potentialNeighbor);
             }
         }
@@ -41,7 +55,13 @@ queue<string> getNeighbors(const string &word){
     return validNeighbors;
 }
 
-void wordChain(const string &wordOne, const string &wordTwo){
+
+/**
+ * @brief wordChain Prints a word chain between wordTwo and wordOne by doing a bfs search between them and finding valid neighbours till wanted result.
+ * @param wordOne
+ * @param wordTwo
+ */
+void wordChain(const string &wordOne, const string &wordTwo, const unordered_set<string> &allWords){
     // init empty queue of stacks
     queue<stack<string>> potentialChains;
     // add a queue consisting of wordOne
@@ -62,7 +82,7 @@ void wordChain(const string &wordOne, const string &wordTwo){
             }
             cout << endl;
         }else{
-            queue<string> neighbors = getNeighbors(topWord);
+            queue<string> neighbors = getNeighbors(topWord,allWords);
             // LOOP OVER EVERY NEIGHBOR
             while(!neighbors.empty()){
                 // pop the first neighbor
@@ -81,7 +101,13 @@ void wordChain(const string &wordOne, const string &wordTwo){
     }
 }
 
+
+/**
+ * @brief main fuction holding all the UX and function
+ * @return
+ */
 int main() {
+    const unordered_set<string> allWords = getAllWords();
     cout << "Welcome to TDDD86 Word Chain." << endl;
     cout << "If you give me two English words, I will transform the" << endl;
     cout << "first into the second by changing one letter at a time." << endl;
@@ -98,7 +124,7 @@ int main() {
 
     cout << "Chain from " << secondWord << " back to " << firstWord << endl;
 
-    wordChain(firstWord,secondWord);
+    wordChain(firstWord,secondWord, allWords);
 
     cout << "Have a nice day." << endl;
 
