@@ -10,10 +10,11 @@
 #include "Node.h"
 #include "Point.h"
 
+
 class Tour {
 public:
 
-    Tour();
+    Tour(Point A, Point B, Point C, Point D);
     ~Tour();
     void show();
     void draw(QGraphicsScene* scene);
@@ -23,7 +24,7 @@ public:
     void insertSmallest(Point p);
 
 private:
-
+    Node* firstNode = nullptr;
 };
 
 #endif // TOUR_H
