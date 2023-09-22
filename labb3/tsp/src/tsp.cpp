@@ -66,15 +66,20 @@ int main(){
     string filename = "tsp10.txt";
     ifstream input;
     input.open(filename);
+        // get dimensions
+        int width;
+        int height;
+        input >> width;
+        input >> height;
     double x;
     double y;
     while(input >> x >> y){
         Point p(x, y);
+        cout << "x: " << x << " y:" << y << endl;
         squareTour.insertNearest(p);
     }
     input.close();
     squareTour.show();
-    cout << "i am human" << endl;
 //    squareTour.size();
 //    squareTour.distance();
     return 0;

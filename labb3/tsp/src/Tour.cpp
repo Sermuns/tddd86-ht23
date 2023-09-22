@@ -86,18 +86,22 @@ double Tour::distance()
  */
 void Tour::insertNearest(Point p)
 { //A->B ->C-> D | C
-    Node* currentNode = firstNode;
-    Node* closestToP = firstNode; // guess that the first node is closest
-    if (currentNode == nullptr){
+  //Problem with either 2nd iteration or further iterations.
+    if(firstNode == nullptr){
         firstNode = new Node(p);
         return;
     }
-    while(currentNode->next != firstNode)
+    Node* currentNode = firstNode->next;
+    Node* closestToP = firstNode; // guess that the first node is closest
+    while(currentNode != firstNode)
     {
       if(currentNode->point.distanceTo(p) < closestToP->point.distanceTo(p)){
           closestToP = currentNode;
       }
       currentNode = currentNode->next;
+      if(currentNode == nullptr){
+          currentNode = firstNode;
+      }
     }
     Node* pNode = new Node(p, closestToP->next);
     closestToP->next = pNode;
