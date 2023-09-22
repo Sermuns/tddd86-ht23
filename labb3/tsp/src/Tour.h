@@ -14,7 +14,7 @@
 class Tour {
 public:
 
-    Tour(Point A, Point B, Point C, Point D);
+    Tour();
     ~Tour();
     void show();
     void draw(QGraphicsScene* scene);

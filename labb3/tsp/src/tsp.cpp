@@ -1,6 +1,6 @@
 /*
  * TDDD86 TSP
- * This client program uses your Tour class and contains the 'main'
+ * This client ogram uses your Tour class and contains the 'main'
  * function to open the input file and set up the program's primitive GUI.
  */
 
@@ -44,10 +44,10 @@
 //        Point p(x, y);
 //        tour.insertNearest(p);
 //        //uncomment the 4 lines below to animate
-//        //tour.draw(scene);
-//        //std::chrono::milliseconds dura(50);
-//        //std::this_thread::sleep_for(dura);
-//        //a.processEvents();
+//        tour.draw(scene);
+//        std::chrono::milliseconds dura(50);
+//        std::this_thread::sleep_for(dura);
+//        a.processEvents();
 //    }
 //    input.close();
 
@@ -62,13 +62,20 @@
 //    return a.exec(); // start Qt event loop
 //}
 int main(){
-    Point p(100.0, 100.0);
-    Point q(500.0, 100.0);
-    Point r(500.0, 500.0);
-    Point s(100.0, 500.0);
-    Tour squareTour(p,q,r,s);
+    Tour squareTour;
+    string filename = "tsp10.txt";
+    ifstream input;
+    input.open(filename);
+    double x;
+    double y;
+    while(input >> x >> y){
+        Point p(x, y);
+        squareTour.insertNearest(p);
+    }
+    input.close();
     squareTour.show();
-    squareTour.size();
-    squareTour.distance();
+    cout << "i am human" << endl;
+//    squareTour.size();
+//    squareTour.distance();
     return 0;
 }

@@ -9,17 +9,8 @@
 #include "Node.h"
 #include "Point.h"
 
-Tour::Tour(Point A, Point B, Point C, Point D)
+Tour::Tour()
 {
-    firstNode = new Node(A);
-    Node *secondNode = new Node(B);
-    Node *thirdNode = new Node(C);
-    Node *fourthNode = new Node(D);
-
-    firstNode->next = secondNode;
-    secondNode->next = thirdNode;
-    thirdNode->next = fourthNode;
-    fourthNode->next = firstNode;
 
 }
 
@@ -70,6 +61,10 @@ int Tour::size()
     // TODO: write this member
 }
 
+/**
+ * @brief Tour::distance
+ * @return the total distance of the tour
+ */
 double Tour::distance()
 {
     Node* currentNode = firstNode;
@@ -85,9 +80,28 @@ double Tour::distance()
     // TODO: write this member
 }
 
+/**
+ * @brief Tour::insertNearest
+ * @param p
+ */
 void Tour::insertNearest(Point p)
-{
-    // TODO: write this member
+{ //A->B ->C-> D | C
+    Node* currentNode = firstNode;
+    Node* closestToP = firstNode; // guess that the first node is closest
+    if (currentNode == nullptr){
+        firstNode = new Node(p);
+        return;
+    }
+    while(currentNode->next != firstNode)
+    {
+      if(currentNode->point.distanceTo(p) < closestToP->point.distanceTo(p)){
+          closestToP = currentNode;
+      }
+      currentNode = currentNode->next;
+    }
+    Node* pNode = new Node(p, closestToP->next);
+    closestToP->next = pNode;
+
 }
 
 void Tour::insertSmallest(Point p)
