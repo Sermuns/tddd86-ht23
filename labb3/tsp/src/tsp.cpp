@@ -18,7 +18,7 @@
 //int main(int argc, char *argv[]) {
 //    QApplication a(argc, argv);
 
-//    string filename = "tsp10.txt";
+//    string filename = "res/tsp10.txt";
 //    ifstream input;
 //    input.open(filename);
 
@@ -62,25 +62,26 @@
 //    return a.exec(); // start Qt event loop
 //}
 int main(){
-    Tour squareTour;
+    Tour tour;
     string filename = "tsp10.txt";
     ifstream input;
     input.open(filename);
-        // get dimensions
-        int width;
-        int height;
-        input >> width;
-        input >> height;
+    // get dimensions
+    int width;
+    int height;
+    input >> width;
+    input >> height;
     double x;
     double y;
     while(input >> x >> y){
         Point p(x, y);
-        cout << "x: " << x << " y:" << y << endl;
-        squareTour.insertNearest(p);
+        //cout << "x: " << x << " y:" << y << endl;
+        tour.insertSmallest(p);
+    tour.show();
+    cout << endl;
     }
     input.close();
-    squareTour.show();
-//    squareTour.size();
-//    squareTour.distance();
+    //cout << tour.size() << endl;
+    cout << tour.distance() << endl;
     return 0;
 }

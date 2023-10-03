@@ -5,6 +5,7 @@
 // TODO: remove this comment header
 
 #include <iostream>
+#include <limits>
 #include "Tour.h"
 #include "Node.h"
 #include "Point.h"
@@ -28,12 +29,6 @@ void Tour::show()
        currentNode = currentNode->next;
     }
     cout << currentNode->point.toString() << endl;
-
-//    Node nextNode = *(firstNode->next);
-//    while(nextNode.toString() != firstNode->toString()){
-//        cout << "hey" << endl;
-//    }
-    // TODO: write this member
 }
 
 void Tour::draw(QGraphicsScene *scene)
@@ -44,7 +39,6 @@ void Tour::draw(QGraphicsScene *scene)
         currentNode->point.drawTo(currentNode->next->point, scene);
     }
     currentNode->point.drawTo(currentNode->next->point, scene);
-    // TODO: write this member
 }
 
 int Tour::size()
@@ -58,7 +52,6 @@ int Tour::size()
       currentNode = currentNode->next;
     }
     return amountOfNodes;
-    // TODO: write this member
 }
 
 /**
@@ -77,7 +70,6 @@ double Tour::distance()
     }
     totalDistance += currentNode->point.distanceTo(currentNode->next->point);
     return totalDistance;
-    // TODO: write this member
 }
 
 /**
@@ -85,30 +77,53 @@ double Tour::distance()
  * @param p
  */
 void Tour::insertNearest(Point p)
-{ //A->B ->C-> D | C
-  //Problem with either 2nd iteration or further iterations.
+{
     if(firstNode == nullptr){
         firstNode = new Node(p);
+        firstNode->next=firstNode;
         return;
     }
-    Node* currentNode = firstNode->next;
-    Node* closestToP = firstNode; // guess that the first node is closest
-    while(currentNode != firstNode)
+    Node* current = firstNode->next;
+    Node* closest = firstNode; // guess that the first node is closest
+    while(current != firstNode)
     {
-      if(currentNode->point.distanceTo(p) < closestToP->point.distanceTo(p)){
-          closestToP = currentNode;
+      if(current->point.distanceTo(p) < closest->point.distanceTo(p)){
+          closest = current;
       }
-      currentNode = currentNode->next;
-      if(currentNode == nullptr){
-          currentNode = firstNode;
-      }
+      current = current->next;
     }
-    Node* pNode = new Node(p, closestToP->next);
-    closestToP->next = pNode;
-
+    Node* pNode = new Node(p, closest->next);
+    closest->next = pNode;
 }
 
 void Tour::insertSmallest(Point p)
 {
-    // TODO: write this member
+    if(firstNode == nullptr){
+        firstNode = new Node(p);
+        firstNode->next=firstNode;
+        return;
+    }
+    Node* current = firstNode->next;
+    Node* best = firstNode; // guess that the first node is best place to insert after
+    Node* pNode = new Node(p);
+    // ANY OTHER INSERTION WILL RESULT IN BETTER DISTANCE!
+    double smallestDistance = numeric_limits<double>::max();
+    while(current != firstNode)
+    {
+      // test-inserting node in front of current:
+      pNode->next=current->next;
+      current->next=pNode;
+      // * insert the node here, check if that distance is better. keep track!
+      if(this->distance() < smallestDistance){
+          smallestDistance = this->distance();
+          best = current;
+      }
+      // removing pNode from linkedlist
+      current->next = pNode->next;
+      // next iteration
+      current = current->next;
+    }
+    // insert pNode after best node
+    pNode->next=best->next;
+    best->next = pNode;
 }
