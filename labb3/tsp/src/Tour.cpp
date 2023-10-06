@@ -18,6 +18,16 @@ Tour::Tour()
 Tour::~Tour()
 {
     // TODO: write this member
+    if(firstNode == nullptr){
+        return;
+    }
+    Node* currentNode = firstNode;
+    while(currentNode->next == firstNode){
+     Node* nextNode = currentNode->next;
+     delete currentNode;
+     currentNode = nextNode;
+    }
+    delete firstNode;
 }
 
 void Tour::show()
@@ -37,6 +47,7 @@ void Tour::draw(QGraphicsScene *scene)
     while(currentNode->next != firstNode)
     {
         currentNode->point.drawTo(currentNode->next->point, scene);
+        currentNode = currentNode->next;
     }
     currentNode->point.drawTo(currentNode->next->point, scene);
 }
@@ -107,6 +118,7 @@ void Tour::insertSmallest(Point p)
     Node* best = firstNode; // guess that the first node is best place to insert after
     Node* pNode = new Node(p);
     // ANY OTHER INSERTION WILL RESULT IN BETTER DISTANCE!
+    //TODO: Samuel i am not smart enough to understand these comments. Please reconsider...
     double smallestDistance = numeric_limits<double>::max();
     while(current != firstNode)
     {
