@@ -1,9 +1,4 @@
-// This is the .cpp file you will edit and turn in.
-// We have provided a skeleton for you,
-// but you must finish it as described in the spec.
-// Also remove these comments here and add your own.
-// TODO: remove this comment header
-
+// TDDD86 Lab 3 by Daniel Alchasov(Danal315) and Samuel Åkesson(samak519). Tour is a linked list of nodes that holds a point and a pointer to the next node that loops in a circular manner.
 #include <iostream>
 #include <limits>
 #include "Tour.h"
@@ -14,10 +9,11 @@ Tour::Tour()
 {
 
 }
-
+/**
+ * @brief Tour::~Tour Deletes and removes used memory by looping through the linked list.
+ */
 Tour::~Tour()
 {
-    // TODO: write this member
     if(firstNode == nullptr){
         return;
     }
@@ -29,7 +25,9 @@ Tour::~Tour()
     }
     delete firstNode;
 }
-
+/**
+ * @brief Tour::show, shows the current nodes point in a string.
+ */
 void Tour::show()
 {
     Node* currentNode = firstNode;
@@ -40,7 +38,10 @@ void Tour::show()
     }
     cout << currentNode->point.toString() << endl;
 }
-
+/**
+ * @brief Tour::draw, draws to a scene using the built in function drawto from the header file.
+ * @param scene
+ */
 void Tour::draw(QGraphicsScene *scene)
 {
     Node* currentNode = firstNode;
@@ -51,7 +52,10 @@ void Tour::draw(QGraphicsScene *scene)
     }
     currentNode->point.drawTo(currentNode->next->point, scene);
 }
-
+/**
+ * @brief Tour::size, loops through the linked list and adds 1 for each node it traverses.
+ * @return size of linked list
+ */
 int Tour::size()
 {
 
@@ -66,7 +70,7 @@ int Tour::size()
 }
 
 /**
- * @brief Tour::distance
+ * @brief Tour::distance, gets the distance of tour by looping through the linked list and addint the "distanceto()" from eact point.
  * @return the total distance of the tour
  */
 double Tour::distance()
@@ -84,7 +88,7 @@ double Tour::distance()
 }
 
 /**
- * @brief Tour::insertNearest
+ * @brief Tour::insertNearest, Inserts a node at the point P where it leads to the tours smallest increase by looping through and seeing which point leads to smallest increase.
  * @param p
  */
 void Tour::insertNearest(Point p)
@@ -119,17 +123,25 @@ void Tour::insertSmallest(Point p)
     Node* pNode = new Node(p);
     // ANY OTHER INSERTION WILL RESULT IN BETTER DISTANCE!
     //TODO: Samuel i am not smart enough to understand these comments. Please reconsider...
-    double smallestDistance = numeric_limits<double>::max();
+//    double smallestDistance = this->distance();
+    double bestDistanceIncrease = numeric_limits<double>::max();
+    double currentDistanceIncrease = 0;
     while(current != firstNode)
     {
+
+      currentDistanceIncrease = this->distance();
+
       // test-inserting node in front of current:
       pNode->next=current->next;
       current->next=pNode;
-      // * insert the node here, check if that distance is better. keep track!
-      if(this->distance() < smallestDistance){
-          smallestDistance = this->distance();
+
+      currentDistanceIncrease = this->distance() - currentDistanceIncrease; // gets a numerical increase
+      //check if this new distance is a lower increase then before.
+      if(currentDistanceIncrease < bestDistanceIncrease){
+          bestDistanceIncrease = currentDistanceIncrease;
           best = current;
       }
+
       // removing pNode from linkedlist
       current->next = pNode->next;
       // next iteration

@@ -4,6 +4,10 @@
  * function to open the input file and set up the program's primitive GUI.
  */
 
+// TDDD86 Lab 3 by Daniel Alchasov(Danal315) and Samuel Åkesson(samak519). Tour is a linked list of nodes that holds a point and a pointer to the next node that loops in a circular manner.
+//The tsp.cpp file visualizes the linked list by connecting the nodes.
+
+
 #include <QApplication>
 #include <QGraphicsView>
 #include <QGraphicsScene>
@@ -18,7 +22,7 @@
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
-    string filename = "tsp100.txt";
+    string filename = "tsp10.txt";
     ifstream input;
     input.open(filename);
 
@@ -42,12 +46,12 @@ int main(int argc, char *argv[]) {
     double y;
     while (input >> x >> y) {
         Point p(x, y);
-        tour.insertNearest(p);
+        tour.insertSmallest(p);
         //uncomment the 4 lines below to animate
-        tour.draw(scene);
-        std::chrono::milliseconds dura(50);
-        std::this_thread::sleep_for(dura);
-        a.processEvents();
+//        tour.draw(scene);
+//        std::chrono::milliseconds dura(50);
+//        std::this_thread::sleep_for(dura);
+//        a.processEvents();
     }
     input.close();
 
