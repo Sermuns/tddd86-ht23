@@ -26,7 +26,7 @@ double Point::distanceTo(Point that) const
 void Point::draw(QGraphicsScene *scene) const
 {
     QGraphicsEllipseItem *item = new QGraphicsEllipseItem(x, y, 1, 1);
-    item->setBrush(QBrush(QColor(255, 0, 0)));
+    item->setBrush(QBrush(QColor(255, 255, 0)));
     scene->addItem(item);
 }
 

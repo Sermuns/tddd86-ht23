@@ -1,4 +1,5 @@
-// TDDD86 Lab 3 by Daniel Alchasov(Danal315) and Samuel Åkesson(samak519). Tour is a linked list of nodes that holds a point and a pointer to the next node that loops in a circular manner.
+// TDDD86 Lab 3 by Daniel Alchasov(Danal315) and Samuel Åkesson(samak519).
+// Tour is a linked list of nodes that holds a point and a pointer to the next node that loops in a circular manner.
 #include <iostream>
 #include <limits>
 #include "Tour.h"
@@ -26,6 +27,8 @@ Tour::~Tour()
 
 void Tour::show()
 {
+    if(firstNode == nullptr) return;
+
     Node* currentNode = firstNode;
     while(currentNode->next != firstNode)
     {
@@ -34,18 +37,24 @@ void Tour::show()
     }
     cout << currentNode->point.toString() << endl;
 }
+
 void Tour::draw(QGraphicsScene *scene)
 {
+    if(firstNode == nullptr) return;
+
     Node* currentNode = firstNode;
     while(currentNode->next != firstNode)
     {
+        currentNode->point.draw(scene);
         currentNode->point.drawTo(currentNode->next->point, scene);
         currentNode = currentNode->next;
     }
     currentNode->point.drawTo(currentNode->next->point, scene);
 }
+
 int Tour::size()
 {
+    if(firstNode == nullptr) return 0;
 
     Node* currentNode = firstNode;
     int amountOfNodes = 1;
@@ -59,6 +68,8 @@ int Tour::size()
 
 double Tour::distance()
 {
+    if(firstNode == nullptr) return 0;
+
     Node* currentNode = firstNode;
     double totalDistance = 0;
     while(currentNode->next != firstNode)
@@ -101,20 +112,25 @@ void Tour::insertSmallest(Point p)
     Node* best = firstNode;
     Node* pNode = new Node(p);
     double bestDistanceIncrease = numeric_limits<double>::max();
-    double currentDistanceIncrease = 0;
+    double previousTotalDistance = this->distance();
+    double currentDistance = 0;
     while(current != firstNode)
     {
 
-      currentDistanceIncrease = this->distance();
 
       // inserting node in front of current:
       pNode->next=current->next;
       current->next=pNode;
 
-      currentDistanceIncrease = this->distance() - currentDistanceIncrease; // gets a numerical increase
+      // A--B
+      // |  |-P
+      // D--C
+      // remove BC distance and add BP and CP distance!
+      currentDistance = previousTotalDistance - current->point.distanceTo(pNode->next->point) +
+              (pNode->point.distanceTo(current->point)+pNode->point.distanceTo(pNode->next->point)); // gets a numerical increase
       // check if this new distance is a lower increase then before.
-      if(currentDistanceIncrease < bestDistanceIncrease){
-          bestDistanceIncrease = currentDistanceIncrease;
+      if(currentDistance < bestDistanceIncrease){
+          bestDistanceIncrease = currentDistance;
           best = current;
       }
 

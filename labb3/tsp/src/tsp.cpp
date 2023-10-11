@@ -23,7 +23,6 @@ int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
     string filename = "tsp10.txt";
-    //string filename = "mona-20k.txt";
     ifstream input;
     input.open(filename);
 
@@ -47,13 +46,13 @@ int main(int argc, char *argv[]) {
     double y;
     while (input >> x >> y) {
         Point p(x, y);
-        //tour.insertSmallest(p);
-        tour.insertNearest(p);
+        tour.insertSmallest(p);
+        //tour.insertNearest(p);
         //uncomment the 4 lines below to animate
-        //tour.draw(scene);
-        //std::chrono::milliseconds dura(50);
-        //std::this_thread::sleep_for(dura);
-        //a.processEvents();
+//        tour.draw(scene);
+//        std::chrono::milliseconds dura(50);
+//        std::this_thread::sleep_for(dura);
+//        a.processEvents();
     }
     input.close();
 
@@ -67,28 +66,3 @@ int main(int argc, char *argv[]) {
     tour.draw(scene);
     return a.exec(); // start Qt event loop
 }
-
-//int main(){
-//    Tour tour;
-//    string filename = "tsp10.txt";
-//    ifstream input;
-//    input.open(filename);
-//    // get dimensions
-//    int width;
-//    int height;
-//    input >> width;
-//    input >> height;
-//    double x;
-//    double y;
-//    while(input >> x >> y){
-//        Point p(x, y);
-//        //cout << "x: " << x << " y:" << y << endl;
-//        tour.insertSmallest(p);
-//    tour.show();
-//    cout << endl;
-//    }
-//    input.close();
-//    //cout << tour.size() << endl;
-//    cout << tour.distance() << endl;
-//    return 0;
-//}
