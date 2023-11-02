@@ -14,6 +14,10 @@ class Robot : public Unit {
 
 public:
 
+    Robot(const Point& p):Unit(p){};
+
+    Robot():Unit(){};
+
     /*
      * did not crash yet
      */
@@ -22,18 +26,18 @@ public:
     /*
      * Crashes and remembers it
      */
-    void doCrash();
+    virtual void doCrash();
 
     /*
      * Return whether the robot crashed
      */
-    bool justCrashed() const;
+    virtual bool justCrashed() const;
 
 
     /*
     * Draws this robot onto the given QGraphicsScene.
     */
-    void draw(QGraphicsScene* scene) const;
+    virtual void draw(QGraphicsScene* scene) const override;
 
 
 };

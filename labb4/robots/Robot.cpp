@@ -5,6 +5,7 @@
 
 #include "Robot.h"
 #include "constants.h"
+#include<iostream>
 
 bool Robot::canMove() const{
     return !crashed;
@@ -18,7 +19,6 @@ bool Robot::justCrashed() const{
     return crashed;
 
 }
-
 
 void Robot::draw(QGraphicsScene *scene) const {
     Point corner = asPoint();

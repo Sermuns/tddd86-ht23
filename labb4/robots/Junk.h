@@ -6,17 +6,23 @@
 #ifndef JUNK_H
 #define JUNK_H
 
-#include "Unit.h"
+#include "Robot.h"
 #include <QGraphicsScene>
 
-class Junk : public Unit {
+class Junk : public Robot {
 public:
-    Junk(const Point& p): Unit(p){}
+    Junk(const Point& p): Robot(p){}
 
     /*
     * Draws this junk onto the given QGraphicsScene.
     */
-    void draw(QGraphicsScene* scene) const;
+    void draw(QGraphicsScene* scene) const override;
+
+    void moveTowards(const Unit& u) override;
+
+    void doCrash() override;
+
+    bool justCrashed() const override;
 };
 
 #endif // JUNK_H
