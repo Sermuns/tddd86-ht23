@@ -23,8 +23,8 @@ const QColor ROBOT_COLOR = QColor(245, 95, 60);
 const QColor HERO_COLOR = QColor(237, 207, 114);
 
 // game constants
-const int MIN_ROBOTS = 10;
-const int MAX_ROBOTS = 80;
+const int MIN_ROBOTS = 10; // was 10
+const int MAX_ROBOTS = 80; // was 80
 const int ROBOTS_INC = 5;	// Additional robots per round
 const int POINTS_PER_ROBOT = 10;
 const int WAIT_BONUS = 20;	// Per robot

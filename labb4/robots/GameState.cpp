@@ -14,11 +14,40 @@ GameState::GameState(int numberOfRobots) {
    for (int i = 0; i < numberOfRobots; i++) {
         Robot* robot = new Robot();
         while(!isEmpty(*robot)){
+            //Teleports the robot with no location onto randomized cooridnate :)
             robot->teleport();
         }
         robots.push_back(robot);
     }
     teleportHero();
+}
+GameState::GameState(const GameState& otherGameState){
+    hero = otherGameState.hero;
+    robots = otherGameState.robots;
+}
+
+GameState::~GameState(){
+ for(unsigned i=0; i < robots.size(); ++i)
+     delete robots[i];
+}
+
+GameState& GameState::operator=(const GameState& otherGameState){
+    //prevent self assignment
+    if(this != &otherGameState){
+//        for(Robot* robot : robots){
+//            delete robot;
+//        }
+        this->robots.clear();
+
+        for(Robot* otherRobot : otherGameState.robots){
+            robots.push_back(otherRobot->clone());
+        }
+
+        hero = otherGameState.hero;
+
+        return *this;
+    }
+
 }
 
 void GameState::draw(QGraphicsScene *scene) const {
@@ -62,15 +91,17 @@ void GameState::junkTheCrashed(){
     for(unsigned i=0; i < robots.size(); ++i){
         if (robots[i]->justCrashed()) {
             Junk* junk = new Junk(robots[i]->asPoint());
+            delete robots[i];
             robots[i] = junk;
         }
     }
 }
 
 bool GameState::stillLiveRobots() const {
-    for(unsigned i=0; i < robots.size(); ++i)
+    for(unsigned i=0; i < robots.size(); ++i){
         if(robots[i]->canMove())
             return true;
+    }
     return false;
 }
 

@@ -22,3 +22,7 @@ void Junk::moveTowards(const Unit& u){
 }
 
 void Junk::doCrash(){}
+
+bool Junk::canMove() const{
+    return false;
+}

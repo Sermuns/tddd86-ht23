@@ -18,10 +18,12 @@ public:
 
     Robot():Unit(){};
 
+    Robot* clone();
+
     /*
      * did not crash yet
      */
-    bool canMove() const;
+    virtual bool canMove() const;
 
     /*
      * Crashes and remembers it

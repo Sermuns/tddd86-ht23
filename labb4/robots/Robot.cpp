@@ -11,13 +11,16 @@ bool Robot::canMove() const{
     return !crashed;
 }
 
+Robot* Robot::clone(){
+    return new Robot(this->asPoint());
+}
+
 void Robot::doCrash(){
     crashed = true;
 }
 
 bool Robot::justCrashed() const{
     return crashed;
-
 }
 
 void Robot::draw(QGraphicsScene *scene) const {

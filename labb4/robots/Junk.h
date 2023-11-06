@@ -23,6 +23,8 @@ public:
     void doCrash() override;
 
     bool justCrashed() const override;
+
+    bool canMove() const override;
 };
 
 #endif // JUNK_H
