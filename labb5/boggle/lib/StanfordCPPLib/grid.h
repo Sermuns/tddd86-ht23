@@ -53,7 +53,6 @@ public:
  * empty grid for which the client must call <code>resize</code> to
  * set the dimensions.
  */
-
     Grid();
     Grid(int nRows, int nCols);
 

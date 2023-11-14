@@ -9,12 +9,14 @@
 #include "Boggle.h"
 #include "bogglemain.h"
 #include "strlib.h"
+#include "lexicon.h"
 // TODO: include any other header files you need
 
 /*
  * Plays one game of Boggle using the given boggle game state object.
  */
 void playOneGame(Boggle& boggle) {
+    boggle.checkForWord("peee");
     // TODO: implement this function (and add any other functions you like to help you)
 
 }

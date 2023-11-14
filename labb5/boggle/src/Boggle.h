@@ -9,6 +9,9 @@
 
 #include <iostream>
 #include <string>
+#include "lexicon.h"
+#include "grid.h"
+
 // TODO: include any other header files you need
 
 using namespace std;
@@ -17,12 +20,21 @@ class Boggle {
 public:
     const string DICTIONARY_FILE = "EnglishWords.dat";
     const int MIN_WORD_LENGTH = 4;
-    const int BOARD_SIZE = 4;
+    static const int BOARD_SIZE = 4;
 
     // TODO: decide the public member functions and declare them
 
+    Boggle();
+    void fillWithJunk();
+    void fillWithPlayerInput(string& input);
+    void checkForWord(string input) const;
+    pair<int,int> checkForChar(char letter)const;
+    void getNeighbours(pair<int, int> coord) const;
+
 private:
     // TODO: decide the private member variables/functions and declare them
+
+    Grid<char> gameBoard;
 
 };
 

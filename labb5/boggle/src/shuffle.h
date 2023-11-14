@@ -43,17 +43,17 @@ void shuffle(T** array2d, int rows, int cols) {
     }
 }
 
-template <typename T>
-void shuffle(vector<T>& v) {
-    for (int i = 0, length = v.size(); i < length; i++) {
-        int j = randomInteger(i, length - 1);
-        if (i != j) {
-            T temp = v[i];
-            v[i] = v[j];
-            v[j] = temp;
-        }
-    }
-}
+//template <typename T>
+//void shuffle(vector<T>& v) {
+//    for (int i = 0, length = v.size(); i < length; i++) {
+//        int j = randomInteger(i, length - 1);
+//        if (i != j) {
+//            T temp = v[i];
+//            v[i] = v[j];
+//            v[j] = temp;
+//        }
+//    }
+//}
 
 template <typename T>
 void shuffle(Grid<T>& grid) {
