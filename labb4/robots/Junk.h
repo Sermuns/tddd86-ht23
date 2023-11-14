@@ -18,12 +18,27 @@ public:
     */
     void draw(QGraphicsScene* scene) const override;
 
-    void moveTowards(const Unit& u) override;
 
+    /**
+     * @brief moveTowards, overrides moveTowards to do nothing;
+     * @param u,
+     */
+    void moveTowards(const Unit& u) override;
+    /**
+     * @brief doCrash does nothing
+     */
     void doCrash() override;
 
+    /**
+     * @brief justCrashed is always false
+     * @return false
+     */
     bool justCrashed() const override;
 
+    /**
+     * @brief canMove as junk cannot move
+     * @return false
+     */
     bool canMove() const override;
 };
 

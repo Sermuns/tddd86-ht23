@@ -56,16 +56,19 @@ void Boggle::fillWithPlayerInput(string& input){
 
 void Boggle::getNeighbours(pair<int, int> coord) const{
     string allLetters =  "";
-    for(int i = coord.first-1; i < coord.first + 1; i++){
-         for(int j = coord.second -1; j < coord.second +1; j++){
+    for(int i = coord.first-1; i < coord.first + 2; i++){
+         for(int j = coord.second -1; j < coord.second +2; j++){
+             if(i != coord.first && j != coord.second)
+              {
              int clampedI = i;
              int clampedJ = j;
              if(i < 0) clampedI += gameBoard.numCols();
-             else if(i > gameBoard.numCols()) clampedI -= gameBoard.numCols();
+             else if(i >= gameBoard.numCols()) clampedI -= gameBoard.numCols();
              if(j < 0) clampedJ += gameBoard.numRows();
-             else if(j > gameBoard.numRows()) clampedJ -= gameBoard.numRows();
+             else if(j >= gameBoard.numRows()) clampedJ -= gameBoard.numRows();
 
              allLetters += gameBoard.get(clampedI,clampedJ);
+             }
 
          }
     }

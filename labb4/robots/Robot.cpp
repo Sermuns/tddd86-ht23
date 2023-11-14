@@ -7,8 +7,15 @@
 #include "constants.h"
 #include<iostream>
 
+
+
+
 bool Robot::canMove() const{
     return !crashed;
+}
+
+Robot::~Robot(){
+
 }
 
 Robot* Robot::clone(){

@@ -16,7 +16,7 @@
  * Plays one game of Boggle using the given boggle game state object.
  */
 void playOneGame(Boggle& boggle) {
-    boggle.checkForWord("peee");
+    boggle.checkForWord("HELICOPTER");
     // TODO: implement this function (and add any other functions you like to help you)
 
 }

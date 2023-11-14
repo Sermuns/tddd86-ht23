@@ -34,9 +34,9 @@ GameState::~GameState(){
 GameState& GameState::operator=(const GameState& otherGameState){
     //prevent self assignment
     if(this != &otherGameState){
-//        for(Robot* robot : robots){
-//            delete robot;
-//        }
+        for(Robot* robot : robots){
+            delete robot;
+        }
         this->robots.clear();
 
         for(Robot* otherRobot : otherGameState.robots){
@@ -45,9 +45,9 @@ GameState& GameState::operator=(const GameState& otherGameState){
 
         hero = otherGameState.hero;
 
-        return *this;
     }
 
+    return *this;
 }
 
 void GameState::draw(QGraphicsScene *scene) const {

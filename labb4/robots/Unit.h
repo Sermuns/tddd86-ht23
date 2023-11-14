@@ -26,7 +26,10 @@ public:
     */
     Unit(const Point& p);
 
-    virtual ~Unit(){}
+    /**
+     * @brief ~Unit, virtual deconstructor.
+     */
+    virtual~Unit() = default;
 
     /*
     * Return Point representation of Unit

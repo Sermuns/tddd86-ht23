@@ -14,10 +14,19 @@ class Robot : public Unit {
 
 public:
 
+    /**
+     * @brief Robot uses unit superclass to create constructor.
+     * @param p
+     */
     Robot(const Point& p):Unit(p){};
 
     Robot():Unit(){};
+    ~Robot();
 
+    /**
+     * @brief clone constructor
+     * @return a robot with this robots coordinate.
+     */
     Robot* clone();
 
     /*
