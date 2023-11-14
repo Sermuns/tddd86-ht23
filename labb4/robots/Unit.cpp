@@ -48,8 +48,7 @@ double Unit::distanceTo(const Unit& u) const {
     return sqrt(dx * dx + dy * dy);
 }
 
-void Unit::draw(QGraphicsScene *scene) const {
-}
+void Unit::draw(QGraphicsScene *scene) const {}
 
 /*
  * Put this unit inside playing field if outside

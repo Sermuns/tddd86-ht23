@@ -14,7 +14,7 @@ GameState::GameState(int numberOfRobots) {
    for (int i = 0; i < numberOfRobots; i++) {
         Robot* robot = new Robot();
         while(!isEmpty(*robot)){
-            //Teleports the robot with no location onto randomized cooridnate :)
+            //Teleports the robot with no location onto randomized cooridnate
             robot->teleport();
         }
         robots.push_back(robot);

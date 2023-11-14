@@ -21,6 +21,7 @@ public:
     Robot(const Point& p):Unit(p){};
 
     Robot():Unit(){};
+
     ~Robot();
 
     /**
