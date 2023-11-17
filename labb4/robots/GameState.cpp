@@ -23,7 +23,10 @@ GameState::GameState(int numberOfRobots) {
 }
 GameState::GameState(const GameState& otherGameState){
     hero = otherGameState.hero;
-    robots = otherGameState.robots;
+    for(int i = 0; i < otherGameState.robot.size(); i++){
+        Robot* copiedRobot  = otherGameState.robot[i].clone();
+        robots.push_back(copiedRobot);
+    }
 }
 
 GameState::~GameState(){
