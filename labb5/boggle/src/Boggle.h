@@ -8,6 +8,7 @@
 #define _boggle_h
 
 #include <iostream>
+#include <set>
 #include <string>
 #include "lexicon.h"
 #include "grid.h"
@@ -15,6 +16,7 @@
 // TODO: include any other header files you need
 
 using namespace std;
+
 
 class Boggle {
 public:
@@ -27,15 +29,17 @@ public:
     Boggle();
     void fillWithJunk();
     void fillWithPlayerInput(string& input);
-    void checkForWord(string input) const;
+    void checkForWord(string input);
     pair<int,int> checkForChar(char letter)const;
-    void getNeighbours(pair<int, int> coord) const;
-
+    map<pair<int,int>,char> getNeighbours(pair<int, int> coord) const;
+    void printBoard() const;
+    bool findWord(string input, pair<int, int> coord) const;
+    void printGuesses() const;
 private:
     // TODO: decide the private member variables/functions and declare them
 
     Grid<char> gameBoard;
-
+    set<string> guessedWords;
 };
 
 #endif
