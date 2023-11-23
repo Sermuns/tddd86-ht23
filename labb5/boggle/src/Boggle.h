@@ -21,7 +21,7 @@ using namespace std;
 class Boggle {
 public:
     const string DICTIONARY_FILE = "EnglishWords.dat";
-    const int MIN_WORD_LENGTH = 4;
+    const unsigned MIN_WORD_LENGTH = 4;
     static const int BOARD_SIZE = 4;
 
     // TODO: decide the public member functions and declare them
@@ -35,10 +35,13 @@ public:
     void printBoard() const;
     bool findWord(string input, pair<int, int> coord) const;
     void printGuesses() const;
+    set<string> getAllPossibleWords() const;
+    string continueWordFromCoordinate(pair<int,int> coord, string partialWord, set<pair<int, int>>& visitedCoords) const;
 private:
     // TODO: decide the private member variables/functions and declare them
 
     Grid<char> gameBoard;
+    Lexicon lexicon;
     set<string> guessedWords;
 };
 

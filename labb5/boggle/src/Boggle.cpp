@@ -6,6 +6,7 @@
 
 #include <sstream>
 #include <map>
+#include <set>
 #include "Boggle.h"
 #include "random.h"
 #include "shuffle.h"
@@ -27,6 +28,8 @@ static string CUBES[NUM_CUBES] = { // the letters on all 6 sides of every cube
 Boggle::Boggle(){
     gameBoard = Grid<char>(BOARD_SIZE, BOARD_SIZE);
     fillWithJunk();
+    lexicon.addWordsFromFile(DICTIONARY_FILE);
+    getAllPossibleWords();
 }
 
 void Boggle::fillWithJunk(){
@@ -55,6 +58,53 @@ void Boggle::fillWithPlayerInput(string& input){
          }
     }
 }
+
+set<string> Boggle::getAllPossibleWords() const{
+    // Gets all words for the computers turn
+
+    set<string> allWords = {};
+    set<pair<int, int>> visitedCoords;
+    for(int y = 0; y < BOARD_SIZE; y++){
+         for(int x = 0; x < BOARD_SIZE; x++){
+             string word = "";
+             allWords.insert(continueWordFromCoordinate({y,x}, word, visitedCoords));
+         }
+   }
+    return allWords;
+}
+
+
+
+string Boggle::continueWordFromCoordinate(pair<int,int> coord, string partialWord, set<pair<int, int>>& visitedCoords) const{
+
+    if(lexicon.contains(partialWord) && partialWord.length() > MIN_WORD_LENGTH){
+        return partialWord; // valid
+    }
+    else if(lexicon.containsPrefix(partialWord) == false){
+        return ""; //not valid
+    }
+
+    string validWord;
+    char nextChar = gameBoard.get(coord.first, coord.second);
+    string attemptedWord = partialWord + nextChar;
+
+    if(lexicon.containsPrefix(attemptedWord)){
+        partialWord = attemptedWord;
+        map<pair<int,int >, char> neighbours = getNeighbours(coord);
+        for (const auto& entry: neighbours ) {
+            // Already visited NEXT Neighbor thanks!
+            if(visitedCoords.find(entry.first) != visitedCoords.end()) continue;
+
+            visitedCoords.insert(entry.first);
+            cout << partialWord << endl;
+            return continueWordFromCoordinate(entry.first, partialWord, visitedCoords);
+        }
+        visitedCoords.clear();
+    }
+
+}
+
+
 
 map<pair<int, int>, char> Boggle::getNeighbours(pair<int, int> coord) const{
     map<pair<int, int>, char> outMap;
