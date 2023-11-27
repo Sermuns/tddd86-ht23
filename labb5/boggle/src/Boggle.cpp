@@ -6,6 +6,7 @@
 
 #include <sstream>
 #include <map>
+#include <vector>
 #include <set>
 #include "Boggle.h"
 #include "random.h"
@@ -63,44 +64,54 @@ set<string> Boggle::getAllPossibleWords() const{
     // Gets all words for the computers turn
 
     set<string> allWords = {};
-    set<pair<int, int>> visitedCoords;
+    vector<vector<bool>> visitedCoords;
     for(int y = 0; y < BOARD_SIZE; y++){
          for(int x = 0; x < BOARD_SIZE; x++){
              string word = "";
-             allWords.insert(continueWordFromCoordinate({y,x}, word, visitedCoords));
+             continueWordFromCoordinate({y,x}, word, visitedCoords, allWords);
          }
    }
     return allWords;
 }
 
 
+// A vector within a vector simulates a 2d grid.
+void Boggle::continueWordFromCoordinate(pair<int,int> coord, string partialWord, vector<vector<bool>>& visitedCoords, set<string>& allWords) const{
 
-string Boggle::continueWordFromCoordinate(pair<int,int> coord, string partialWord, set<pair<int, int>>& visitedCoords) const{
 
+    //Current coord is visited
+    visited[coord.first][coord.second] == true;
+
+
+    char nextChar = gameBoard.get(coord.first, coord.second);
+    string attemptedWord = partialWord + nextChar;
+    
     if(lexicon.contains(partialWord) && partialWord.length() > MIN_WORD_LENGTH){
-        return partialWord; // valid
+        allWords.insert(partialWord);
     }
     else if(lexicon.containsPrefix(partialWord) == false){
-        return ""; //not valid
+        partialWord.pop_back(); //remove latest insert.
+         return; //not valid
     }
 
     string validWord;
-    char nextChar = gameBoard.get(coord.first, coord.second);
-    string attemptedWord = partialWord + nextChar;
-
+   
+    //unneeded if statement i think. 
     if(lexicon.containsPrefix(attemptedWord)){
-        partialWord = attemptedWord;
+
         map<pair<int,int >, char> neighbours = getNeighbours(coord);
+
         for (const auto& entry: neighbours ) {
             // Already visited NEXT Neighbor thanks!
-            if(visitedCoords.find(entry.first) != visitedCoords.end()) continue;
-
-            visitedCoords.insert(entry.first);
+            if(visitedCoords[entry.first.first][entry.first.second])) continue;
+            visitedCoords.insert(ent);
             cout << partialWord << endl;
-            return continueWordFromCoordinate(entry.first, partialWord, visitedCoords);
+            continueWordFromCoordinate(entry.first, partialWord, visitedCoords, allWords);
+
         }
-        visitedCoords.clear();
     }
+    partialWord.pop_back();
+    visited[coord.first][coord.second] = false;
 
 }
 
