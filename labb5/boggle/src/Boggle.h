@@ -29,14 +29,18 @@ public:
     Boggle();
     void fillWithJunk();
     void fillWithPlayerInput(string& input);
-    void checkForWord(string input);
+    bool checkForWord(string input);
     pair<int,int> checkForChar(char letter)const;
     map<pair<int,int>,char> getNeighbours(pair<int, int> coord) const;
     void printBoard() const;
     bool findWord(string input, pair<int, int> coord) const;
-    void printGuesses() const;
+    void printPlayerStats();
     set<string> getAllPossibleWords() const;
-    string continueWordFromCoordinate(pair<int,int> coord, string partialWord, set<pair<int, int>>& visitedCoords) const;
+    void continueWordFromCoordinate(pair<int,int> coord, string partialWord, vector<vector<bool>>& visitedCoords, set<string>& allWords) const;
+    bool isAlreadyGuessed(const string& guess) const;
+    void insertGuess(string& guess);
+    bool isValidWord(string& word) const;
+    int getPoints(set<string>& listOfWords);
 private:
     // TODO: decide the private member variables/functions and declare them
 
