@@ -60,7 +60,7 @@ void Boggle::fillWithPlayerInput( string &input) {
         {
            if(!isalpha(chars)){
                invalidInput = true;
-               cout << "Invalid input, requires letters only" << endl;
+               cout << "Error: "<< "Invalid input, requires letters only" << endl;
                break;
            }
            else{
@@ -69,8 +69,10 @@ void Boggle::fillWithPlayerInput( string &input) {
         }
 
         if(input.length() != 16){
-            cout << "Invalid size on board, input:  " << input.length() << " required 16 chars" << endl;
+            cout <<  "Error: "<<"Invalid size on board, input:  " << input.length() << " required 16 chars" << endl;
+            invalidInput = true;
         }
+
         if(invalidInput){
             cout << "Type the 16 letters to appear on the board: ";
             getline(cin, input);
@@ -111,6 +113,10 @@ set<string> Boggle::getAllPossibleWords() const {
     return allWords;
 }
 
+
+set<string> Boggle::getGuessedWords() const{
+    return guessedWords;
+}
 
 // A vector within a vector simulates a 2d grid.
 void
@@ -161,14 +167,10 @@ map<pair<int, int>, char> Boggle::getNeighbours(const pair<int, int> &coord) con
         for (int x = coord.second - 1; x < coord.second + 2; x++) {
             if (y == coord.first && x == coord.second) continue;
 
-            int clampedY = y;
-            int clampedX = x;
-
             if (y < 0 || y >= gameBoard.numRows() || x < 0 || x >= gameBoard.numCols()) continue;
 
-
-            pair<int, int> coord{clampedY, clampedX};
-            outMap[coord] = gameBoard.get(clampedY, clampedX);
+            pair<int, int> coord{y, x};
+            outMap[coord] = gameBoard.get(y, x);
 
         }
     }

@@ -143,11 +143,13 @@ public:
      */
     void resetGame();
 
+    set<string> getGuessedWords() const;
+
 private:
 
     Grid<char> gameBoard;
     Lexicon lexicon;
-    set<string> guessedWords {get};
+    set<string> guessedWords;
 };
 
 #endif

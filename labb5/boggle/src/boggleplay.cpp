@@ -50,8 +50,8 @@ void playOneGame(Boggle &boggle) {
         }
         cout << endl;
     }
-
-
+    
+    
     //Computer wins : D
     cout << "It's my turn :D" << endl;
     set<string> allWords = boggle.getAllPossibleWords();
