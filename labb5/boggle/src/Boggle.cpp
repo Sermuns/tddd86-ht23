@@ -176,7 +176,7 @@ bool Boggle::checkForWord(const string& input) const{
     string upperInput = toUpperCase(input);
     pair<int,int> coords = checkForChar(input.at(0));
 
-    // First characeter not in board!
+    // First character not in board!
     if(coords.first == -1)
     {
         std::cout << input.at(0) << " not found" << std::endl;
@@ -186,18 +186,17 @@ bool Boggle::checkForWord(const string& input) const{
     if(findWord(upperInput, coords)){
         return true;
     }
-
 }
 
-int Boggle::getPoints(set<string>& listOfWords) {
+int Boggle::getPoints(set<string> listOfWords) const{
     int totalPoints = 0;
-    for(const auto& word : listOfWords){
+    for (const auto &word: listOfWords)
         totalPoints += word.length() - 3;
-    }
+
     return totalPoints;
 }
 
-bool Boggle::findWord(string& input, const pair<int, int>& coord) const{
+bool Boggle::findWord(basic_string<char> input, const pair<int, int>& coord) const{
 
     if(input.length() == 0) return true;
 

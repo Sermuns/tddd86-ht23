@@ -15,7 +15,7 @@ using namespace std;
 
 void intro();
 void playOneGame(Boggle& boggle);
-bool yesOrNo(string prompt);
+bool yesOrNo(const string& prompt);
 void clearConsole();
 
 #endif

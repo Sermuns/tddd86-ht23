@@ -13,8 +13,6 @@
 #include "lexicon.h"
 #include "grid.h"
 
-// TODO: include any other header files you need
-
 using namespace std;
 
 
@@ -24,8 +22,6 @@ public:
     const unsigned MIN_WORD_LENGTH = 4;
     static const int BOARD_SIZE = 4;
 
-    // TODO: decide the public member functions and declare them
-    // constructor for Boggle.
     Boggle();
 
     /*
@@ -55,7 +51,7 @@ public:
     * ---------------------
     * checks if the an char exist on board and returns its coords. 
     */
-    pair<int,int> checkForChar(const char letter)const;
+    pair<int,int> checkForChar(char letter) const;
     /*
     * Method: getNeighbours
     * Usage: boggle.getNeighbours(pair<int, int> coord));
@@ -76,7 +72,7 @@ public:
     * ---------------------
     * returns true if it could find input as a word. recursively goes through the grid to find if word exists.
     */
-    bool findWord(string& input, const pair<int, int>& coord) const;
+    bool findWord(basic_string<char> input, const pair<int, int>& coord) const;
     /*
     * Method: printPlayerStats
     * Usage: boggle.printPlayerStats();
@@ -125,7 +121,7 @@ public:
     * ---------------------
     * calculates the points from a list of words following the rules of boggle.
     */
-    int getPoints(set<string>& listOfWords);
+    int getPoints(set<string> listOfWords) const;
 private:
 
     Grid<char> gameBoard;

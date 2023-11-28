@@ -71,7 +71,7 @@ void intro() {
  * false if the user types anything that starts with 'n', or re-prompts if
  * the user doesn't type a 'y' or 'n' word.
  */
-bool yesOrNo(string prompt) {
+bool yesOrNo(const string& prompt) {
     cout << prompt;
     while (true) {
         string answer;
