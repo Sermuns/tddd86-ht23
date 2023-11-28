@@ -20,68 +20,69 @@ using namespace std;
 static const int NUM_CUBES = 16;   // the number of cubes in the game
 static const int CUBE_SIDES = 6;   // the number of sides on each cube
 static string CUBES[NUM_CUBES] = { // the letters on all 6 sides of every cube
-   "AAEEGN", "ABBJOO", "ACHOPS", "AFFKPS",
-   "AOOTTW", "CIMOTU", "DEILRX", "DELRVY",
-   "DISTTY", "EEGHNW", "EEINSU", "EHRTVW",
-   "EIOSST", "ELRTTY", "HIMNQU", "HLNNRZ"
+        "AAEEGN", "ABBJOO", "ACHOPS", "AFFKPS",
+        "AOOTTW", "CIMOTU", "DEILRX", "DELRVY",
+        "DISTTY", "EEGHNW", "EEINSU", "EHRTVW",
+        "EIOSST", "ELRTTY", "HIMNQU", "HLNNRZ"
 
 };
 
-Boggle::Boggle(){
+Boggle::Boggle() {
     gameBoard = Grid<char>(BOARD_SIZE, BOARD_SIZE);
     lexicon.addWordsFromFile(DICTIONARY_FILE);
 
 }
 
-bool Boggle::isValidWord(string& word) const{
+bool Boggle::isValidWord(string &word) const {
     return lexicon.contains(word) && word.length() >= MIN_WORD_LENGTH;
 }
 
-void Boggle::fillWithJunk(){
-    int index =0
-            ;
+void Boggle::fillWithJunk() {
+    int index = 0;
 
-    for(int y = 0; y < BOARD_SIZE; y++){
-         for(int x = 0; x < BOARD_SIZE; x++){
-             char currentRandomChar = CUBES[index].at(randomInteger(0,(CUBE_SIDES - 1)));
-             gameBoard.set(y,x, currentRandomChar);
-             index++;
-         }
+    for (int y = 0; y < BOARD_SIZE; y++) {
+        for (int x = 0; x < BOARD_SIZE; x++) {
+            char currentRandomChar = CUBES[index].at(randomInteger(0, (CUBE_SIDES - 1)));
+            gameBoard.set(y, x, currentRandomChar);
+            index++;
+        }
     }
     shuffle(gameBoard);
 }
 
-void Boggle::fillWithPlayerInput(const string& input){
+void Boggle::fillWithPlayerInput(const string &input) {
     string upperInput = toUpperCase(input);
-    int index =0;
+    int index = 0;
 
-    for(int y = 0; y < BOARD_SIZE; y++){
-         for(int x = 0; x < BOARD_SIZE; x++){
-             gameBoard.set(y,x, upperInput.at(index));
-             index++;
-         }
+    for (int y = 0; y < BOARD_SIZE; y++) {
+        for (int x = 0; x < BOARD_SIZE; x++) {
+            gameBoard.set(y, x, upperInput.at(index));
+            index++;
+        }
     }
 }
 
-set<string> Boggle::getAllPossibleWords() const{
+set<string> Boggle::getAllPossibleWords() const {
     // Gets all words for the computers turn
 
     set<string> allWords = {};
     vector<vector<bool>> visitedCoords(BOARD_SIZE, vector<bool>(BOARD_SIZE, false));
 
-    for(int y = 0; y < BOARD_SIZE; y++){
-         for(int x = 0; x < BOARD_SIZE; x++){
-             string word = "";
-             continueWordFromCoordinate({y,x}, word, visitedCoords, allWords);
-         }
-   }
+    for (int y = 0; y < BOARD_SIZE; y++) {
+        for (int x = 0; x < BOARD_SIZE; x++) {
+            string word = "";
+            continueWordFromCoordinate({y, x}, word, visitedCoords, allWords);
+        }
+    }
 
     return allWords;
 }
 
 
 // A vector within a vector simulates a 2d grid.
-void Boggle::continueWordFromCoordinate(const pair<int,int>& coord, string partialWord, vector<vector<bool>>& visitedCoords, set<string>& allWords) const{
+void
+Boggle::continueWordFromCoordinate(const pair<int, int> &coord, string partialWord, vector<vector<bool>> &visitedCoords,
+                                   set<string> &allWords) const {
 
 
     //Current coord is visited
@@ -89,21 +90,19 @@ void Boggle::continueWordFromCoordinate(const pair<int,int>& coord, string parti
 
     char nextChar = gameBoard.get(coord.first, coord.second);
     partialWord += nextChar;
-    
-    if(isValidWord(partialWord) && !isAlreadyGuessed(partialWord)){
-        allWords.insert(partialWord);
-    }
 
-    else if(lexicon.containsPrefix(partialWord) == false){
+    if (isValidWord(partialWord) && !isAlreadyGuessed(partialWord)) {
+        allWords.insert(partialWord);
+    } else if (lexicon.containsPrefix(partialWord) == false) {
         partialWord.pop_back(); //remove latest insert.
         visitedCoords[coord.first][coord.second] = false; //unvisit coord
         return; //not valid
     }
 
-    map<pair<int,int >, char> neighbours = getNeighbours(coord);
-    for (const auto& entry: neighbours ) {
+    map<pair<int, int>, char> neighbours = getNeighbours(coord);
+    for (const auto &entry: neighbours) {
         // Already visited NEXT Neighbor thanks!
-        if(visitedCoords[entry.first.first][entry.first.second] == true) continue;
+        if (visitedCoords[entry.first.first][entry.first.second] == true) continue;
 
         continueWordFromCoordinate(entry.first, partialWord, visitedCoords, allWords);
 
@@ -114,81 +113,79 @@ void Boggle::continueWordFromCoordinate(const pair<int,int>& coord, string parti
 
 }
 
-bool Boggle::isAlreadyGuessed(const string& guess) const{
-    for(const auto& word : guessedWords){
-        if(guess == word){
+bool Boggle::isAlreadyGuessed(const string &guess) const {
+    for (const auto &word: guessedWords) {
+        if (guess == word) {
             return true;
         }
     }
     return false;
 }
 
-map<pair<int, int>, char> Boggle::getNeighbours(const pair<int, int>& coord) const{
+map<pair<int, int>, char> Boggle::getNeighbours(const pair<int, int> &coord) const {
     map<pair<int, int>, char> outMap;
-    for(int y = coord.first-1; y < coord.first + 2; y++){
-         for(int x = coord.second -1; x < coord.second +2; x++){
-             if(y == coord.first && x == coord.second) continue;
+    for (int y = coord.first - 1; y < coord.first + 2; y++) {
+        for (int x = coord.second - 1; x < coord.second + 2; x++) {
+            if (y == coord.first && x == coord.second) continue;
 
-             int clampedY = y;
-             int clampedX = x;
+            int clampedY = y;
+            int clampedX = x;
 
-             if(y < 0) clampedY += gameBoard.numRows();
-             else if(y >= gameBoard.numRows()) clampedY -= gameBoard.numRows();
-             if(x < 0) clampedX += gameBoard.numCols();
-             else if(x >= gameBoard.numCols()) clampedX -= gameBoard.numCols();
+            if (y < 0) clampedY += gameBoard.numRows();
+            else if (y >= gameBoard.numRows()) clampedY -= gameBoard.numRows();
+            if (x < 0) clampedX += gameBoard.numCols();
+            else if (x >= gameBoard.numCols()) clampedX -= gameBoard.numCols();
 
-             pair<int,int> coord{clampedY, clampedX};
-             outMap[coord] = gameBoard.get(clampedY, clampedX);
+            pair<int, int> coord{clampedY, clampedX};
+            outMap[coord] = gameBoard.get(clampedY, clampedX);
 
-         }
+        }
     }
     return outMap;
 }
 
 
-
-void Boggle::printBoard() const{
-    for(int y = 0; y < BOARD_SIZE; y++){
-         for(int x = 0; x < BOARD_SIZE; x++){
+void Boggle::printBoard() const {
+    for (int y = 0; y < BOARD_SIZE; y++) {
+        for (int x = 0; x < BOARD_SIZE; x++) {
             cout << gameBoard.get(y, x);
-         }
-         cout << endl;
+        }
+        cout << endl;
     }
 }
 
-void Boggle::insertGuess(const string& guess){
+void Boggle::insertGuess(const string &guess) {
     guessedWords.insert(guess);
 }
 
-void Boggle::printPlayerStats() const{
+void Boggle::printPlayerStats() const {
     string wordsConnected = "";
     int wordsAmount = guessedWords.size();
-    for(auto& guess : guessedWords){
-       wordsConnected += guess + ", ";
+    for (auto &guess: guessedWords) {
+        wordsConnected += guess + ", ";
     }
-     cout << "Your words ("<<wordsAmount << "): {" << wordsConnected << "}" <<endl;
-     cout << "Your score (" << getPoints(guessedWords) << ")";
-       cout << endl;
+    cout << "Your words (" << wordsAmount << "): {" << wordsConnected << "}" << endl;
+    cout << "Your score (" << getPoints(guessedWords) << ")";
+    cout << endl;
 }
 
-bool Boggle::checkForWord(const string& input) const{
+bool Boggle::checkForWord(const string &input) const {
 
     string upperInput = toUpperCase(input);
-    pair<int,int> coords = checkForChar(input.at(0));
+    pair<int, int> coords = checkForChar(input.at(0));
 
     // First character not in board!
-    if(coords.first == -1)
-    {
+    if (coords.first == -1) {
         std::cout << input.at(0) << " not found" << std::endl;
         return false;
     }
 
-    if(findWord(upperInput, coords)){
+    if (findWord(upperInput, coords)) {
         return true;
     }
 }
 
-int Boggle::getPoints(set<string> listOfWords) const{
+int Boggle::getPoints(set<string> listOfWords) const {
     int totalPoints = 0;
     for (const auto &word: listOfWords)
         totalPoints += word.length() - 3;
@@ -196,37 +193,36 @@ int Boggle::getPoints(set<string> listOfWords) const{
     return totalPoints;
 }
 
-bool Boggle::findWord(basic_string<char> input, const pair<int, int>& coord) const{
+bool Boggle::findWord(basic_string<char> input, const pair<int, int> &coord) const {
 
-    if(input.length() == 0) return true;
+    if (input.length() == 0) return true;
 
     map<pair<int, int>, char> neighbours = getNeighbours(coord);
 
     char nextLetter = input.at(0);
-    pair<int,int> coordOfNextLetter = {-1, -1}; // Assume NOT in neighbors
+    pair<int, int> coordOfNextLetter = {-1, -1}; // Assume NOT in neighbors
 
-    for(const auto& pair : neighbours){
-        if(pair.second == nextLetter){
+    for (const auto &pair: neighbours) {
+        if (pair.second == nextLetter) {
             coordOfNextLetter = pair.first;
             break;
         }
     }
 
-    if(coordOfNextLetter.first == -1) return false;
+    if (coordOfNextLetter.first == -1) return false;
 
     return findWord(input.substr(1), coordOfNextLetter);
 }
 
 
-
-pair<int, int> Boggle::checkForChar(const char letter) const{
-    for(int y = 0; y < BOARD_SIZE; y++){
-         for(int x = 0; x < BOARD_SIZE; x++){
-            if(gameBoard.get(y,x) == letter)
-                return {y,x};
-         }
+pair<int, int> Boggle::checkForChar(const char letter) const {
+    for (int y = 0; y < BOARD_SIZE; y++) {
+        for (int x = 0; x < BOARD_SIZE; x++) {
+            if (gameBoard.get(y, x) == letter)
+                return {y, x};
+        }
     }
-    return {-1,-1};
+    return {-1, -1};
 }
 
 

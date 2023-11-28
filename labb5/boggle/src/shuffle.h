@@ -13,8 +13,8 @@
 #include "random.h"
 #include <vector>
 
-template <typename T>
-void shuffle(T* array, int length) {
+template<typename T>
+void shuffle(T *array, int length) {
     for (int i = 0; i < length; i++) {
         int j = randomInteger(i, length - 1);
         if (i != j) {
@@ -25,8 +25,8 @@ void shuffle(T* array, int length) {
     }
 }
 
-template <typename T>
-void shuffle(T** array2d, int rows, int cols) {
+template<typename T>
+void shuffle(T **array2d, int rows, int cols) {
     int length = rows * cols;
     for (int i = 0; i < length; i++) {
         int j = randomInteger(i, length - 1);
@@ -55,8 +55,8 @@ void shuffle(T** array2d, int rows, int cols) {
 //    }
 //}
 
-template <typename T>
-void shuffle(Grid<T>& grid) {
+template<typename T>
+void shuffle(Grid<T> &grid) {
     int rows = grid.numRows();
     int cols = grid.numCols();
     int length = rows * cols;

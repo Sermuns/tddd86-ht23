@@ -15,10 +15,10 @@
 /*
  * Plays one game of Boggle using the given boggle game state object.
  */
-void playOneGame(Boggle& boggle) {
+void playOneGame(Boggle &boggle) {
     bool playerTurn = true;
 
-    while(playerTurn){
+    while (playerTurn) {
         boggle.printPlayerStats();
         boggle.printBoard();
         cout << "Type a word (or press Enter to end your turn):";
@@ -26,14 +26,13 @@ void playOneGame(Boggle& boggle) {
         //loop till the players gets the wrong answer
         string answer;
         getline(cin, answer);
-        if(answer.length() < boggle.MIN_WORD_LENGTH){
+        if (answer.length() < boggle.MIN_WORD_LENGTH) {
             cout << "Incorrect length a minimum of 4 letters is required" << endl;
             continue;
         }
-        if(boggle.checkForWord(answer) && boggle.isValidWord(answer)){
+        if (boggle.checkForWord(answer) && boggle.isValidWord(answer)) {
             boggle.insertGuess(answer);
-        }
-        else{
+        } else {
             cout << "Word not found" << endl;
             playerTurn = false;
         }
@@ -48,7 +47,7 @@ void playOneGame(Boggle& boggle) {
     for (string word: allWords) {
         connectedWords += word + ", ";
     }
-    cout << "My words ("<< allWords.size() <<") {" << connectedWords << "}" << endl;
+    cout << "My words (" << allWords.size() << ") {" << connectedWords << "}" << endl;
     cout << "My score(" << boggle.getPoints(allWords) << ")" << endl;
 
     cout << "I won... most likely..." << endl;

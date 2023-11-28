@@ -11,11 +11,15 @@
 
 #include "Boggle.h"
 #include <string>
+
 using namespace std;
 
 void intro();
-void playOneGame(Boggle& boggle);
-bool yesOrNo(const string& prompt);
+
+void playOneGame(Boggle &boggle);
+
+bool yesOrNo(const string &prompt);
+
 void clearConsole();
 
 #endif

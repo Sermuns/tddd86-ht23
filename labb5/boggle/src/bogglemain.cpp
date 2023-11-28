@@ -29,12 +29,11 @@ int main() {
     Boggle boggle;
     string input;
 
-    if(!yesOrNo("Do you want to generate a random board?")){
+    if (!yesOrNo("Do you want to generate a random board?")) {
         cout << "Type the 16 letters to appear on the board:";
         getline(cin, input);
         boggle.fillWithPlayerInput(input);
-    }
-    else{
+    } else {
         boggle.fillWithJunk();
     }
 
@@ -71,7 +70,7 @@ void intro() {
  * false if the user types anything that starts with 'n', or re-prompts if
  * the user doesn't type a 'y' or 'n' word.
  */
-bool yesOrNo(const string& prompt) {
+bool yesOrNo(const string &prompt) {
     cout << prompt;
     while (true) {
         string answer;
