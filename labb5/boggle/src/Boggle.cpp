@@ -6,6 +6,7 @@
 
 #include <sstream>
 #include <map>
+#include <vector>
 #include <set>
 #include "Boggle.h"
 #include "random.h"
@@ -23,13 +24,17 @@ static string CUBES[NUM_CUBES] = { // the letters on all 6 sides of every cube
    "AOOTTW", "CIMOTU", "DEILRX", "DELRVY",
    "DISTTY", "EEGHNW", "EEINSU", "EHRTVW",
    "EIOSST", "ELRTTY", "HIMNQU", "HLNNRZ"
+
 };
 
 Boggle::Boggle(){
     gameBoard = Grid<char>(BOARD_SIZE, BOARD_SIZE);
-    fillWithJunk();
     lexicon.addWordsFromFile(DICTIONARY_FILE);
-    getAllPossibleWords();
+
+}
+
+bool Boggle::isValidWord(string& word) const{
+    return lexicon.contains(word) && word.length() >= MIN_WORD_LENGTH;
 }
 
 void Boggle::fillWithJunk(){
@@ -41,19 +46,18 @@ void Boggle::fillWithJunk(){
              char currentRandomChar = CUBES[index].at(randomInteger(0,(CUBE_SIDES - 1)));
              gameBoard.set(y,x, currentRandomChar);
              index++;
-
          }
     }
     shuffle(gameBoard);
 }
 
-void Boggle::fillWithPlayerInput(string& input){
-    input = toUpperCase(input);
+void Boggle::fillWithPlayerInput(const string& input){
+    string upperInput = toUpperCase(input);
     int index =0;
 
     for(int y = 0; y < BOARD_SIZE; y++){
          for(int x = 0; x < BOARD_SIZE; x++){
-             gameBoard.set(y,x, input.at(index));
+             gameBoard.set(y,x, upperInput.at(index));
              index++;
          }
     }
@@ -63,50 +67,63 @@ set<string> Boggle::getAllPossibleWords() const{
     // Gets all words for the computers turn
 
     set<string> allWords = {};
-    set<pair<int, int>> visitedCoords;
+    vector<vector<bool>> visitedCoords(BOARD_SIZE, vector<bool>(BOARD_SIZE, false));
+
     for(int y = 0; y < BOARD_SIZE; y++){
          for(int x = 0; x < BOARD_SIZE; x++){
              string word = "";
-             allWords.insert(continueWordFromCoordinate({y,x}, word, visitedCoords));
+             continueWordFromCoordinate({y,x}, word, visitedCoords, allWords);
          }
    }
+
     return allWords;
 }
 
 
+// A vector within a vector simulates a 2d grid.
+void Boggle::continueWordFromCoordinate(const pair<int,int>& coord, string partialWord, vector<vector<bool>>& visitedCoords, set<string>& allWords) const{
 
-string Boggle::continueWordFromCoordinate(pair<int,int> coord, string partialWord, set<pair<int, int>>& visitedCoords) const{
 
-    if(lexicon.contains(partialWord) && partialWord.length() > MIN_WORD_LENGTH){
-        return partialWord; // valid
-    }
-    else if(lexicon.containsPrefix(partialWord) == false){
-        return ""; //not valid
-    }
+    //Current coord is visited
+    visitedCoords[coord.first][coord.second] = true;
 
-    string validWord;
     char nextChar = gameBoard.get(coord.first, coord.second);
-    string attemptedWord = partialWord + nextChar;
-
-    if(lexicon.containsPrefix(attemptedWord)){
-        partialWord = attemptedWord;
-        map<pair<int,int >, char> neighbours = getNeighbours(coord);
-        for (const auto& entry: neighbours ) {
-            // Already visited NEXT Neighbor thanks!
-            if(visitedCoords.find(entry.first) != visitedCoords.end()) continue;
-
-            visitedCoords.insert(entry.first);
-            cout << partialWord << endl;
-            return continueWordFromCoordinate(entry.first, partialWord, visitedCoords);
-        }
-        visitedCoords.clear();
+    partialWord += nextChar;
+    
+    if(isValidWord(partialWord) && !isAlreadyGuessed(partialWord)){
+        allWords.insert(partialWord);
     }
+
+    else if(lexicon.containsPrefix(partialWord) == false){
+        partialWord.pop_back(); //remove latest insert.
+        visitedCoords[coord.first][coord.second] = false; //unvisit coord
+        return; //not valid
+    }
+
+    map<pair<int,int >, char> neighbours = getNeighbours(coord);
+    for (const auto& entry: neighbours ) {
+        // Already visited NEXT Neighbor thanks!
+        if(visitedCoords[entry.first.first][entry.first.second] == true) continue;
+
+        continueWordFromCoordinate(entry.first, partialWord, visitedCoords, allWords);
+
+    }
+
+    partialWord.pop_back();
+    visitedCoords[coord.first][coord.second] = false;
 
 }
 
+bool Boggle::isAlreadyGuessed(const string& guess) const{
+    for(const auto& word : guessedWords){
+        if(guess == word){
+            return true;
+        }
+    }
+    return false;
+}
 
-
-map<pair<int, int>, char> Boggle::getNeighbours(pair<int, int> coord) const{
+map<pair<int, int>, char> Boggle::getNeighbours(const pair<int, int>& coord) const{
     map<pair<int, int>, char> outMap;
     for(int y = coord.first-1; y < coord.first + 2; y++){
          for(int x = coord.second -1; x < coord.second +2; x++){
@@ -128,6 +145,8 @@ map<pair<int, int>, char> Boggle::getNeighbours(pair<int, int> coord) const{
     return outMap;
 }
 
+
+
 void Boggle::printBoard() const{
     for(int y = 0; y < BOARD_SIZE; y++){
          for(int x = 0; x < BOARD_SIZE; x++){
@@ -137,32 +156,48 @@ void Boggle::printBoard() const{
     }
 }
 
-void Boggle::printGuesses() const{
-    for(auto& guess : guessedWords){
-        cout << guess << ", ";
-    }
-    cout << endl;
+void Boggle::insertGuess(const string& guess){
+    guessedWords.insert(guess);
 }
 
-void Boggle::checkForWord(string input){
+void Boggle::printPlayerStats() const{
+    string wordsConnected = "";
+    int wordsAmount = guessedWords.size();
+    for(auto& guess : guessedWords){
+       wordsConnected += guess + ", ";
+    }
+     cout << "Your words ("<<wordsAmount << "): {" << wordsConnected << "}" <<endl;
+     cout << "Your score (" << getPoints(guessedWords) << ")";
+       cout << endl;
+}
 
-    input = toUpperCase(input);
+bool Boggle::checkForWord(const string& input) const{
+
+    string upperInput = toUpperCase(input);
     pair<int,int> coords = checkForChar(input.at(0));
 
     // First characeter not in board!
     if(coords.first == -1)
     {
         std::cout << input.at(0) << " not found" << std::endl;
-        return;
+        return false;
     }
 
-    if(findWord(input, coords)){
-        guessedWords.insert(input);
+    if(findWord(upperInput, coords)){
+        return true;
     }
 
 }
 
-bool Boggle::findWord(string input, pair<int, int> coord) const{
+int Boggle::getPoints(set<string>& listOfWords) {
+    int totalPoints = 0;
+    for(const auto& word : listOfWords){
+        totalPoints += word.length() - 3;
+    }
+    return totalPoints;
+}
+
+bool Boggle::findWord(string& input, const pair<int, int>& coord) const{
 
     if(input.length() == 0) return true;
 
@@ -185,7 +220,7 @@ bool Boggle::findWord(string input, pair<int, int> coord) const{
 
 
 
-pair<int, int> Boggle::checkForChar(char letter) const{
+pair<int, int> Boggle::checkForChar(const char letter) const{
     for(int y = 0; y < BOARD_SIZE; y++){
          for(int x = 0; x < BOARD_SIZE; x++){
             if(gameBoard.get(y,x) == letter)
