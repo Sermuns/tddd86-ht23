@@ -51,13 +51,13 @@ void Boggle::fillWithJunk(){
     shuffle(gameBoard);
 }
 
-void Boggle::fillWithPlayerInput(string& input){
-    input = toUpperCase(input);
+void Boggle::fillWithPlayerInput(const string& input){
+    string upperInput = toUpperCase(input);
     int index =0;
 
     for(int y = 0; y < BOARD_SIZE; y++){
          for(int x = 0; x < BOARD_SIZE; x++){
-             gameBoard.set(y,x, input.at(index));
+             gameBoard.set(y,x, upperInput.at(index));
              index++;
          }
     }
@@ -81,7 +81,7 @@ set<string> Boggle::getAllPossibleWords() const{
 
 
 // A vector within a vector simulates a 2d grid.
-void Boggle::continueWordFromCoordinate(pair<int,int> coord, string partialWord, vector<vector<bool>>& visitedCoords, set<string>& allWords) const{
+void Boggle::continueWordFromCoordinate(const pair<int,int>& coord, string partialWord, vector<vector<bool>>& visitedCoords, set<string>& allWords) const{
 
 
     //Current coord is visited
@@ -123,7 +123,7 @@ bool Boggle::isAlreadyGuessed(const string& guess) const{
     return false;
 }
 
-map<pair<int, int>, char> Boggle::getNeighbours(pair<int, int> coord) const{
+map<pair<int, int>, char> Boggle::getNeighbours(const pair<int, int>& coord) const{
     map<pair<int, int>, char> outMap;
     for(int y = coord.first-1; y < coord.first + 2; y++){
          for(int x = coord.second -1; x < coord.second +2; x++){
@@ -156,11 +156,11 @@ void Boggle::printBoard() const{
     }
 }
 
-void Boggle::insertGuess(string& guess){
+void Boggle::insertGuess(const string& guess){
     guessedWords.insert(guess);
 }
 
-void Boggle::printPlayerStats(){
+void Boggle::printPlayerStats() const{
     string wordsConnected = "";
     int wordsAmount = guessedWords.size();
     for(auto& guess : guessedWords){
@@ -171,9 +171,9 @@ void Boggle::printPlayerStats(){
        cout << endl;
 }
 
-bool Boggle::checkForWord(string input){
+bool Boggle::checkForWord(const string& input) const{
 
-    input = toUpperCase(input);
+    string upperInput = toUpperCase(input);
     pair<int,int> coords = checkForChar(input.at(0));
 
     // First characeter not in board!
@@ -183,7 +183,7 @@ bool Boggle::checkForWord(string input){
         return false;
     }
 
-    if(findWord(input, coords)){
+    if(findWord(upperInput, coords)){
         return true;
     }
 
@@ -197,7 +197,7 @@ int Boggle::getPoints(set<string>& listOfWords) {
     return totalPoints;
 }
 
-bool Boggle::findWord(string input, pair<int, int> coord) const{
+bool Boggle::findWord(string& input, const pair<int, int>& coord) const{
 
     if(input.length() == 0) return true;
 
@@ -220,7 +220,7 @@ bool Boggle::findWord(string input, pair<int, int> coord) const{
 
 
 
-pair<int, int> Boggle::checkForChar(char letter) const{
+pair<int, int> Boggle::checkForChar(const char letter) const{
     for(int y = 0; y < BOARD_SIZE; y++){
          for(int x = 0; x < BOARD_SIZE; x++){
             if(gameBoard.get(y,x) == letter)
