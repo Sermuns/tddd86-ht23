@@ -27,21 +27,14 @@ int main() {
     intro();
     // play games repeatedly until user decides to quit
     Boggle boggle;
-    string input;
-
-    if (!yesOrNo("Do you want to generate a random board?")) {
-        cout << "Type the 16 letters to appear on the board:";
-        getline(cin, input);
-        boggle.fillWithPlayerInput(input);
-    } else {
-        boggle.fillWithJunk();
-    }
 
     while (true) {
         playOneGame(boggle);
 
         cout << endl;
         if (!yesOrNo("Play again (Y/N)? ")) break;
+
+        boggle.resetGame();
     }
 
     cout << "Have a nice day." << endl;

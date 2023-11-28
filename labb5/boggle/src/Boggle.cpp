@@ -50,7 +50,36 @@ void Boggle::fillWithJunk() {
     shuffle(gameBoard);
 }
 
-void Boggle::fillWithPlayerInput(const string &input) {
+void Boggle::fillWithPlayerInput( string &input) {
+    cout << "Type the 16 letters to appear on the board:";
+    getline(cin, input);
+
+    bool invalidInput = true;
+    while(invalidInput){
+        for(const auto& chars: input)
+        {
+           if(!isalpha(chars)){
+               invalidInput = true;
+               cout << "Invalid input, requires letters only" << endl;
+               break;
+           }
+           else{
+               invalidInput = false;
+           }
+        }
+
+        if(input.length() != 16){
+            cout << "Invalid size on board, input:  " << input.length() << " required 16 chars" << endl;
+        }
+        if(invalidInput){
+            cout << "Type the 16 letters to appear on the board: ";
+            getline(cin, input);
+        }
+
+
+    }
+
+
     string upperInput = toUpperCase(input);
     int index = 0;
 
@@ -60,6 +89,10 @@ void Boggle::fillWithPlayerInput(const string &input) {
             index++;
         }
     }
+}
+
+void Boggle::resetGame(){
+    guessedWords.clear();
 }
 
 set<string> Boggle::getAllPossibleWords() const {
@@ -131,10 +164,8 @@ map<pair<int, int>, char> Boggle::getNeighbours(const pair<int, int> &coord) con
             int clampedY = y;
             int clampedX = x;
 
-            if (y < 0) clampedY += gameBoard.numRows();
-            else if (y >= gameBoard.numRows()) clampedY -= gameBoard.numRows();
-            if (x < 0) clampedX += gameBoard.numCols();
-            else if (x >= gameBoard.numCols()) clampedX -= gameBoard.numCols();
+            if (y < 0 || y >= gameBoard.numRows() || x < 0 || x >= gameBoard.numCols()) continue;
+
 
             pair<int, int> coord{clampedY, clampedX};
             outMap[coord] = gameBoard.get(clampedY, clampedX);
@@ -161,22 +192,22 @@ void Boggle::insertGuess(const string &guess) {
 void Boggle::printPlayerStats() const {
     string wordsConnected = "";
     int wordsAmount = guessedWords.size();
-    for (auto &guess: guessedWords) {
-        wordsConnected += guess + ", ";
+    for (const auto& guess: guessedWords) {
+        wordsConnected += toUpperCase(guess) + ", ";
     }
     cout << "Your words (" << wordsAmount << "): {" << wordsConnected << "}" << endl;
     cout << "Your score (" << getPoints(guessedWords) << ")";
     cout << endl;
 }
 
-bool Boggle::checkForWord(const string &input) const {
+bool Boggle::checkForWord(const string& input) const {
 
     string upperInput = toUpperCase(input);
-    pair<int, int> coords = checkForChar(input.at(0));
+    pair<int, int> coords = checkForChar(upperInput.at(0));
 
     // First character not in board!
     if (coords.first == -1) {
-        std::cout << input.at(0) << " not found" << std::endl;
+        std::cout << upperInput.at(0) << " not found" << std::endl;
         return false;
     }
 
@@ -185,7 +216,7 @@ bool Boggle::checkForWord(const string &input) const {
     }
 }
 
-int Boggle::getPoints(set<string> listOfWords) const {
+int Boggle::getPoints(const set<string> listOfWords) const {
     int totalPoints = 0;
     for (const auto &word: listOfWords)
         totalPoints += word.length() - 3;

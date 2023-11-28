@@ -16,6 +16,17 @@
  * Plays one game of Boggle using the given boggle game state object.
  */
 void playOneGame(Boggle &boggle) {
+    string input;
+    clearConsole();
+
+    if (!yesOrNo("Do you want to generate a random board? (y/n)")) {
+
+
+        boggle.fillWithPlayerInput(input);
+    } else {
+        boggle.fillWithJunk();
+    }
+
     bool playerTurn = true;
 
     while (playerTurn) {
@@ -23,20 +34,21 @@ void playOneGame(Boggle &boggle) {
         boggle.printBoard();
         cout << "Type a word (or press Enter to end your turn):";
 
-        //loop till the players gets the wrong answer
-        string answer;
-        getline(cin, answer);
-        if (answer.length() < boggle.MIN_WORD_LENGTH) {
+
+        getline(cin, input);
+        if (input == ""){
+            playerTurn = false;
+        }
+        else if (input.length() < boggle.MIN_WORD_LENGTH) {
             cout << "Incorrect length a minimum of 4 letters is required" << endl;
             continue;
         }
-        if (boggle.checkForWord(answer) && boggle.isValidWord(answer)) {
-            boggle.insertGuess(answer);
+        else if (boggle.checkForWord(input) && boggle.isValidWord(input)) {
+            boggle.insertGuess(input);
         } else {
             cout << "Word not found" << endl;
-            playerTurn = false;
         }
-
+        cout << endl;
     }
 
 
@@ -44,8 +56,8 @@ void playOneGame(Boggle &boggle) {
     cout << "It's my turn :D" << endl;
     set<string> allWords = boggle.getAllPossibleWords();
     string connectedWords = "";
-    for (string word: allWords) {
-        connectedWords += word + ", ";
+    for (const string& word: allWords) {
+        connectedWords += toUpperCase(word) + ", ";
     }
     cout << "My words (" << allWords.size() << ") {" << connectedWords << "}" << endl;
     cout << "My score(" << boggle.getPoints(allWords) << ")" << endl;

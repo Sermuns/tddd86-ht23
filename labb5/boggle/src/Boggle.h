@@ -38,7 +38,7 @@ public:
     * ---------------------
     * fills the grid with user input by taking in 16 characters.
     */
-    void fillWithPlayerInput(const string &input);
+    void fillWithPlayerInput(string &input);
 
     /*
     * Method: checkForWord
@@ -102,8 +102,7 @@ public:
     * ---------------------
     * Recursive backtracking to find all possible words and inserts it into a set.  
     */
-    void
-    continueWordFromCoordinate(const pair<int, int> &coord, string partialWord, vector<vector<bool>> &visitedCoords,
+    void continueWordFromCoordinate(const pair<int, int> &coord, string partialWord, vector<vector<bool>> &visitedCoords,
                                set<string> &allWords) const;
 
     /*
@@ -138,11 +137,17 @@ public:
     */
     int getPoints(set<string> listOfWords) const;
 
+    /* Method: restgame
+     * Usage
+     *clears player guesses
+     */
+    void resetGame();
+
 private:
 
     Grid<char> gameBoard;
     Lexicon lexicon;
-    set<string> guessedWords;
+    set<string> guessedWords {get};
 };
 
 #endif
