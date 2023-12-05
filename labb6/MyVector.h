@@ -8,7 +8,8 @@
 #define MY_VECTOR_H
 
 #include "MyException.h"
-
+#include <ostream>
+#include <istream>
 template <typename T>
 class MyVector
 {
@@ -21,7 +22,6 @@ public:
     MyVector(const MyVector& other);
 
     MyVector& operator =(const MyVector& other);
-
 
     void push_back(const T&);
 
@@ -49,20 +49,31 @@ private:
 
 template<typename T>
 MyVector<T>::MyVector(){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+
+    capacity = 1;
+    numberOfElements = 0;
+    elements = new T[capacity]; // for fishes :D
+
 }
 
 template<typename T>
 MyVector<T>::~MyVector(){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    //Delete all fishes :D
+    delete[] elements;
 }
 
 template<typename T>
 MyVector<T>::MyVector(const MyVector& other){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    if(this == &other) return; // prevent self copy
+
+    numberOfElements = other.numberOfElements;
+    capacity = other.capacity;
+    elements = new T[capacity];
+
+    // Deep copy -_- zZzZzZ
+    for(int i = 0; i < other.numberOfElements; i++){
+        elements[i] = T(other.elements[i]);
+    }
 }
 
 template<typename T>
@@ -73,8 +84,17 @@ MyVector<T>& MyVector<T>::operator =(const MyVector& other){
 
 template<typename T>
 void MyVector<T>::push_back(const T& e){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    if(numberOfElements > capacity) return;
+    T* tempElements = new T[capacity+1];
+
+    for(int i = 0; i < numberOfElements; i++){
+        tempElements[i] = elements[i];
+    }
+    delete[] elements;
+    elements = tempElements;
+
+    elements[numberOfElements] = e; // last element
+    numberOfElements += 1;
 }
 
 template<typename T>
@@ -85,14 +105,18 @@ void MyVector<T>::pop_back(){
 
 template<typename T>
 T& MyVector<T>::operator[](unsigned i){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    if (i >= numberOfElements)
+        MYEXCEPTION("OUT OF BOUNDS");
+
+    return elements[i];
 }
 
 template<typename T>
-const T& MyVector<T>::operator[](unsigned i)const{
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+const T& MyVector<T>::operator[](unsigned i) const {
+    if (i >= numberOfElements)
+        MYEXCEPTION("OUT OF BOUNDS");
+
+    return elements[i];
 }
 
 template<typename T>
@@ -103,8 +127,10 @@ bool MyVector<T>::empty()const{
 
 template<typename T>
 void MyVector<T>::clear(){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    for(int i = 0; i < numberOfElements; i++) {
+        elements[i] = nullptr;
+    }
+    numberOfElements = 0;
 }
 
 template<typename T>
@@ -115,14 +141,12 @@ unsigned MyVector<T>::size()const{
 
 template<typename T>
 T* MyVector<T>::begin(){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    return elements;
 }
 
 template<typename T>
 T* MyVector<T>::end(){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    return elements + numberOfElements;
 }
 
 #endif // MY_VECTOR_H

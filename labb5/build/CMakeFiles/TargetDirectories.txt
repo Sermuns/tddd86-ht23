@@ -1,0 +1,4 @@
+C:/Users/Thicc/Documents/coding/tddd86-ht23/labb5/build/CMakeFiles/Boggle.dir
+C:/Users/Thicc/Documents/coding/tddd86-ht23/labb5/build/CMakeFiles/copyResources.dir
+C:/Users/Thicc/Documents/coding/tddd86-ht23/labb5/build/CMakeFiles/edit_cache.dir
+C:/Users/Thicc/Documents/coding/tddd86-ht23/labb5/build/CMakeFiles/rebuild_cache.dir

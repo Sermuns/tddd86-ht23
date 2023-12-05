@@ -16,7 +16,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include "random.h"
+#include "lib\StanfordCPPLib\random.h"
 #include "strlib.h"
 #include "Boggle.h"
 #include "bogglemain.h"
