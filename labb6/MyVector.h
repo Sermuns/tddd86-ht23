@@ -45,6 +45,10 @@ private:
 
     // private members?
 
+    unsigned numberOfElements; // how much of the vector that is ACTUALLY full.
+    unsigned capacity; //
+    T* elements; //template
+
 };
 
 template<typename T>
@@ -78,8 +82,17 @@ MyVector<T>::MyVector(const MyVector& other){
 
 template<typename T>
 MyVector<T>& MyVector<T>::operator =(const MyVector& other){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    if(this != &other){
+        numberOfElements = other.numberOfElements;
+        capacity = other.capacity;
+        elements = new T[capacity];
+
+        // Deep copy -_- zZzZzZ
+        for(int i = 0; i < other.numberOfElements; i++){
+            elements[i] = other.elements[i];
+        }
+    }
+    return *this;
 }
 
 template<typename T>
@@ -99,8 +112,11 @@ void MyVector<T>::push_back(const T& e){
 
 template<typename T>
 void MyVector<T>::pop_back(){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    //element is still there :(( maybe ok? maybe not.... :/
+    if(numberOfElements == 0) return;
+
+    elements[numberOfElements - 1].~T();
+    numberOfElements -= 1;
 }
 
 template<typename T>
@@ -121,8 +137,7 @@ const T& MyVector<T>::operator[](unsigned i) const {
 
 template<typename T>
 bool MyVector<T>::empty()const{
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    return numberOfElements == 0;
 }
 
 template<typename T>
@@ -135,8 +150,7 @@ void MyVector<T>::clear(){
 
 template<typename T>
 unsigned MyVector<T>::size()const{
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    return numberOfElements;
 }
 
 template<typename T>
