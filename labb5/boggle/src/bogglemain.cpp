@@ -24,17 +24,17 @@
 using namespace std;
 
 int main() {
-    //intro();
-
+    intro();
     // play games repeatedly until user decides to quit
     Boggle boggle;
+
     while (true) {
         playOneGame(boggle);
 
         cout << endl;
-        if (!yesOrNo("Play again (Y/N)? ")) {
-            break;
-        }
+        if (!yesOrNo("Play again (Y/N)? ")) break;
+
+        boggle.resetGame();
     }
 
     cout << "Have a nice day." << endl;
@@ -63,7 +63,7 @@ void intro() {
  * false if the user types anything that starts with 'n', or re-prompts if
  * the user doesn't type a 'y' or 'n' word.
  */
-bool yesOrNo(string prompt) {
+bool yesOrNo(const string &prompt) {
     cout << prompt;
     while (true) {
         string answer;

@@ -15,9 +15,54 @@
 /*
  * Plays one game of Boggle using the given boggle game state object.
  */
-void playOneGame(Boggle& boggle) {
-    boggle.checkForWord("HELICOPTER");
-    // TODO: implement this function (and add any other functions you like to help you)
+void playOneGame(Boggle &boggle) {
+    string input;
+    clearConsole();
+
+    if (!yesOrNo("Do you want to generate a random board? (y/n)")) {
+
+
+        boggle.fillWithPlayerInput(input);
+    } else {
+        boggle.fillWithJunk();
+    }
+
+    bool playerTurn = true;
+
+    while (playerTurn) {
+        boggle.printPlayerStats();
+        boggle.printBoard();
+        cout << "Type a word (or press Enter to end your turn):";
+
+
+        getline(cin, input);
+        if (input == ""){
+            playerTurn = false;
+        }
+        else if (input.length() < boggle.MIN_WORD_LENGTH) {
+            cout << "Incorrect length a minimum of 4 letters is required" << endl;
+            continue;
+        }
+        else if (boggle.checkForWord(input) && boggle.isValidWord(input)) {
+            boggle.insertGuess(input);
+        } else {
+            cout << "Word not found" << endl;
+        }
+        cout << endl;
+    }
+    
+    
+    //Computer wins : D
+    cout << "It's my turn :D" << endl;
+    set<string> allWords = boggle.getAllPossibleWords();
+    string connectedWords = "";
+    for (const string& word: allWords) {
+        connectedWords += toUpperCase(word) + ", ";
+    }
+    cout << "My words (" << allWords.size() << ") {" << connectedWords << "}" << endl;
+    cout << "My score(" << boggle.getPoints(allWords) << ")" << endl;
+
+    cout << "I won... most likely..." << endl;
 
 }
 
