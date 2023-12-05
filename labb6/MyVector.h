@@ -63,6 +63,9 @@ MyVector<T>::MyVector(){
 template<typename T>
 MyVector<T>::~MyVector(){
     //Delete all fishes :D
+    for(unsigned i = 0; i < numberOfElements; i++){
+        elements[i].~T();
+    }
     delete[] elements;
 }
 
@@ -143,7 +146,7 @@ bool MyVector<T>::empty()const{
 template<typename T>
 void MyVector<T>::clear(){
     for(int i = 0; i < numberOfElements; i++) {
-        elements[i] = nullptr;
+        elements[i].~T();
     }
     numberOfElements = 0;
 }
