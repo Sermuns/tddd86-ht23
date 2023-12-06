@@ -10,6 +10,8 @@
 #include "MyException.h"
 #include <ostream>
 #include <istream>
+#include <iostream>
+
 template <typename T>
 class MyVector
 {
@@ -41,6 +43,8 @@ public:
 
     unsigned size()const;
 
+    void incrementSize();
+
 private:
 
     // private members?
@@ -50,6 +54,14 @@ private:
     T* elements; //template
 
 };
+
+template<typename T>
+void MyVector<T>::incrementSize() {
+    numberOfElements += 1;
+    capacity += 1;
+
+}
+
 
 template<typename T>
 MyVector<T>::MyVector(){
@@ -100,8 +112,9 @@ MyVector<T>& MyVector<T>::operator =(const MyVector& other){
 
 template<typename T>
 void MyVector<T>::push_back(const T& e){
-    if(numberOfElements > capacity) return;
-    T* tempElements = new T[capacity+1];
+    if(numberOfElements > capacity) MYEXCEPTION("MORE ELEMENTS THAN CAPACITY");
+    capacity += 1;
+    T* tempElements = new T[capacity];
 
     for(int i = 0; i < numberOfElements; i++){
         tempElements[i] = elements[i];
@@ -116,7 +129,7 @@ void MyVector<T>::push_back(const T& e){
 template<typename T>
 void MyVector<T>::pop_back(){
     //element is still there :(( maybe ok? maybe not.... :/
-    if(numberOfElements == 0) return;
+    if(numberOfElements == 0) MYEXCEPTION("EMPTY VECTOR");
 
     elements[numberOfElements - 1].~T();
     numberOfElements -= 1;
@@ -165,5 +178,6 @@ template<typename T>
 T* MyVector<T>::end(){
     return elements + numberOfElements;
 }
+
 
 #endif // MY_VECTOR_H

@@ -7,7 +7,9 @@
 #ifndef MY_PRIORITY_QUEUE_H
 #define MY_PRIORITY_QUEUE_H
 
+#include <algorithm>
 #include "MyVector.h"
+#include <iostream>
 #include "MyException.h"
 
 
@@ -38,44 +40,62 @@ private:
 
 template <typename T, typename C>
 MyPriorityQueue<T,C>::MyPriorityQueue(){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    vector_array = MyVector<T>();
+    strictly_larger_operator =  C();
 }
 
 template <typename T, typename C>
 MyPriorityQueue<T,C>::~MyPriorityQueue(){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    // Temp solution
+    vector_array.clear();
 }
 
+/**
+ * @brief Inserts t into vector_array by finding its correct position using comperator.
+ * @tparam T type of element
+ * @tparam C comparator
+ * @param t element to be pushed into order.
+ */
 template <typename T, typename C>
 void MyPriorityQueue<T,C>::push(const T& t){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    if(vector_array.empty()){
+        vector_array.push_back(t);
+    }else{
+        unsigned i = 0;
+        while(i < vector_array.size() && strictly_larger_operator(t, vector_array[i])){
+            i++;
+        }
+        vector_array.push_back(t);
+        for(unsigned j = vector_array.size()-1; j > i; j--){
+            vector_array[j] = vector_array[j-1];
+        }
+        vector_array[i] = t;
+    }
+
 }
 
 template <typename T, typename C>
 T MyPriorityQueue<T,C>::top()const{
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    return vector_array[0];
 }
 
 template <typename T, typename C>
 void MyPriorityQueue<T,C>::pop(){
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+
+    for(unsigned i = 1; i < vector_array.size(); i++){
+        vector_array[i-1] = vector_array[i];
+    }
+    vector_array.pop_back();
 }
 
 template <typename T, typename C>
 bool MyPriorityQueue<T,C>::empty()const{
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    return vector_array.empty();
 }
 
 template <typename T, typename C>
 unsigned MyPriorityQueue<T,C>::size()const{
-    // TODO: replace the code below with your code for this member
-    MYEXCEPTION("unimplemented method");
+    return vector_array.size();
 }
 
 #endif // MY_PRIORITY_QUEUE_H
