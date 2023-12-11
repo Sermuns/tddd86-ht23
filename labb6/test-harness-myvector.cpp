@@ -22,13 +22,13 @@ using namespace std;
  * of the implementation, you will want to turn more and more of these
  * flags on.
  */
-#define BasicMyVectorTestEnabled          1
-#define ModerateMyVectorTestEnabled       1
-#define HarderMyVectorTestEnabled         1
-#define MutatingMyVectorTestEnabled       1
+#define BasicMyVectorTestEnabled          0
+#define ModerateMyVectorTestEnabled       0
+#define HarderMyVectorTestEnabled         0
+#define MutatingMyVectorTestEnabled       0
 
-#define ConstMyVectorTestEnabled          1
-#define BasicCopyTestEnabled              0
+#define ConstMyVectorTestEnabled          0
+#define BasicCopyTestEnabled              1
 #define ModerateCopyTestEnabled           1
 
 

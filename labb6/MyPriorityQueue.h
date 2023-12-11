@@ -14,53 +14,85 @@
 template <typename T, typename C>
 class MyPriorityQueue
 {
-    MyVector<T> vector_array;
     C strictly_larger_operator;
 
 public:
+
+    MyVector<T> vector_array;
+
+    /**
+     * @brief MyPriorityQueue, constructor for priority queue that initilizes the vector and comparable
+     */
     MyPriorityQueue();
 
+    /**
+      * @brief Destructor of the priorty queue that deletes the array
+      */
     ~MyPriorityQueue();
 
+    /**
+     * @brief push element t into the correct spot in the priority queue.
+     * @param t element that is getting added.
+     */
     void push(const T& t);
-
+    /**
+     * @brief top
+     * @return the element with the highest priority.
+     */
     T top()const;
-
+    /**
+     * @brief pop, pops the element with the highest priority and fixes the tree to follow the priorty structure.
+     */
     void pop();
 
+    /**
+     * @brief empty, checks if array is empty.
+     * @return true if array is empty.
+     */
     bool empty()const;
-
+    /**
+   * @brief size, function to get the size of the array.
+   * @return size of array
+   */
   unsigned size() const;
 
 private:
+  bool isChild(int potentialChildIndex)
+  { return  potentialChildIndex < vector_array.size(); }
+
+  /**
+   * @brief siftDown, given index gets sifted down in the tree into its "correct" spot depending on the comparable.
+   * @param index of wanted element to go down tree.
+   */
   void siftDown(int index){
       while(true)
-      {
-          int leftChildIndex = 2*index +1;
-          int rightChildIndex = leftChildIndex +1;
-          if(leftChildIndex > vector_array.size()) break;
-
-
-           if(strictly_larger_operator(vector_array[index], vector_array[leftChildIndex])){
-                swap(index, leftChildIndex);
-                index =leftChildIndex;
-           }
-           else if(strictly_larger_operator(vector_array[index], vector_array[rightChildIndex])){
-               swap(index, rightChildIndex);
-               index = rightChildIndex;
-           }
-           else{
-               break;
-           }
+    {
+      int leftChildIndex = (2*index) +1;
+      int rightChildIndex = leftChildIndex +1;
+       if(isChild(leftChildIndex) && strictly_larger_operator(vector_array[index], vector_array[leftChildIndex])){
+            swap(index, leftChildIndex);
+            index = leftChildIndex;
+       }
+       else if(isChild(rightChildIndex) && strictly_larger_operator(vector_array[index], vector_array[rightChildIndex]) ){
+           swap(index, rightChildIndex);
+           index = rightChildIndex;
+       }
+       else{
+           break;
+       }
 
       }
   }
+  /**
+   * @brief siftUp, given index gets sifted up in the tree into its "correct" positon depending on the comparable.
+   * @param index of wanted element to go up tree.
+   */
   void siftUp(int index){
       while(true)
       {
-          int parentIndex = ceil(index/2);
-
           if(index == 0) break;
+
+          int parentIndex = (index - 1)/2;
 
           if(strictly_larger_operator(vector_array[parentIndex], vector_array[index])){
               swap(index, parentIndex);
@@ -71,8 +103,13 @@ private:
           }
       }
   }
+  /**
+   * @brief swap, helper function to swap positon of 2 indexes.
+   * @param index
+   * @param indexTwo
+   */
   void swap(int index, int indexTwo){
-      const auto& tempHolder = vector_array[index];
+      auto tempHolder = vector_array[index];
       vector_array[index] = vector_array[indexTwo];
       vector_array[indexTwo] = tempHolder;
   }
@@ -88,15 +125,15 @@ MyPriorityQueue<T,C>::MyPriorityQueue(){
 
 template <typename T, typename C>
 MyPriorityQueue<T,C>::~MyPriorityQueue(){
-    delete &vector_array;
 
 }
 
+
+
 template <typename T, typename C>
 void MyPriorityQueue<T,C>::push(const T& t){
-    while(true){
-
-    }
+    vector_array.push_back(t);
+    siftUp(vector_array.size() - 1);
 }
 
 template <typename T, typename C>
@@ -106,10 +143,9 @@ T MyPriorityQueue<T,C>::top()const{
 
 template <typename T, typename C>
 void MyPriorityQueue<T,C>::pop(){
-    swap(0, *vector_array.end());
+    swap(0, vector_array.size()-1);
     vector_array.pop_back();
     siftDown(0);
-
 }
 
 template <typename T, typename C>

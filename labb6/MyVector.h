@@ -15,12 +15,23 @@ class MyVector
 {
 
 public:
+    /**
+     * @brief MyVector, constructor of array.
+     */
     MyVector();
 
     ~MyVector();
-
+    /**
+     * @brief MyVector copy contstructor that deep copies the given array.
+     * @param other "Myvector"
+     */
     MyVector(const MyVector& other);
 
+    /**
+     * @brief operator =
+     * @param other
+     * @return
+     */
     MyVector& operator =(const MyVector& other);
 
 
@@ -60,22 +71,27 @@ MyVector<T>::~MyVector(){
 
 template<typename T>
 MyVector<T>::MyVector(const MyVector& other){
-     if(other == this) MYEXCEPTION("Self assignment");
 
     this->capacity = other.capacity;
-
+    this->numberOfElements = other.numberOfElements;
+    storage = new T[capacity];
     for(unsigned i = 0; i < other.numberOfElements; i++){
-       *storage[i] = *other.storage[i];
+       storage[i] = other.storage[i];
     }
 }
 
+
 template<typename T>
 MyVector<T>& MyVector<T>::operator =(const MyVector& other){
-    if(other == this) MYEXCEPTION("Self assignment");
+    if(other.storage == this->storage) return *this;
 
+
+    delete [] storage;
+    this->capacity = other.capacity;
+    this->numberOfElements = other.numberOfElements;
     storage = new T[other.capacity];
     for(unsigned i = 0; i < other.numberOfElements; i++){
-       *storage[i] = *other.storage[i];
+       storage[i] = other.storage[i];
     }
 
     return *this;

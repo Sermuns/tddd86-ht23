@@ -1,5 +1,5 @@
 /*************************************************
- * File: test-harness-myprio.cpp 
+ * File: test-harness-myprio.cpp
  *
  * File containing several test cases that can be
  * used to verify the correctness of the MyPriorityQueue
@@ -22,7 +22,7 @@ using namespace std;
  * of the implementation, you will want to turn more and more of these
  * flags on.
  */
-#define BasicMyPriorityQueueTestEnabled          1 
+#define BasicMyPriorityQueueTestEnabled          1
 #define ModerateMyPriorityQueueTestEnabled       1
 
 #define BasicCopyTestEnabled            0
@@ -124,12 +124,12 @@ void basicMyPriorityQueueTest() try {
 void moderateMyPriorityQueueTest() try {
 #if ModerateMyPriorityQueueTestEnabled
   printBanner("Moderate MyPriorityQueue Test");
-
   MyPriorityQueue<int,comp> prio;
   for (size_t i = 0; i < 8; ++i)
     prio.push(i);
   for (size_t i = 0; i < 8; ++i)
     prio.push(7-i);
+
 
   /* Check that basic properties hold. */
   checkCondition(prio.size() == 16, "New prio has the right number of elements.");
@@ -137,6 +137,7 @@ void moderateMyPriorityQueueTest() try {
 
   /* Make sure that the values of these points are correct. */
   for (size_t i = 0; i < 16; ++i){
+
     checkCondition(prio.size() == 16-i, "prio has the right number of elements.");
     int current = prio.top();
     checkCondition(current == i/2,      "top prio element is correct.");
@@ -144,8 +145,8 @@ void moderateMyPriorityQueueTest() try {
   }
 
   checkCondition(prio.empty(),     "prio is empty.");
-  
-  
+
+
   endTest();
 #else
   testDisabled("moderateMyPriorityQueueTest");
@@ -164,13 +165,13 @@ void basicCopyTest() try {
   /* For simplicity, we'll use one-dimensional MyPriorityQueues in this step. */
   MyPriorityQueue<int, comp> one;
   for (size_t i = 0; i < 10; ++i)
-    one.push(i); 
+    one.push(i);
   for (size_t i = 0; i < 10; ++i)
-    one.push(9 - i); 
+    one.push(9 - i);
 
-  
+
   {
-    /* Create a clone of one and confirm that everything copied correctly. 
+    /* Create a clone of one and confirm that everything copied correctly.
      * This uses the copy constructor.
      */
     MyPriorityQueue<int,comp> clone = one;
@@ -187,15 +188,15 @@ void basicCopyTest() try {
       clone.pop();
     }
 
-    checkCondition(clone.empty(),     "clone is empty.");  
+    checkCondition(clone.empty(),     "clone is empty.");
 
   }
   {
-    /* Create a clone of one and confirm that everything copied correctly. 
+    /* Create a clone of one and confirm that everything copied correctly.
      * This uses the assignment operator.
      */
     MyPriorityQueue<int,comp> clone;
-    clone = one;    
+    clone = one;
 
     /* Check that everything in one is there. */
     for (size_t i = 0; i < 20; ++i){
@@ -205,9 +206,9 @@ void basicCopyTest() try {
       clone.pop();
     }
 
-    checkCondition(clone.empty(),     "clone is empty.");  
+    checkCondition(clone.empty(),     "clone is empty.");
 
-    
+
   }
 
   /* Check that everything in one is there. */
@@ -218,9 +219,9 @@ void basicCopyTest() try {
     one.pop();
   }
 
-  checkCondition(one.empty(),     "one is empty.");  
+  checkCondition(one.empty(),     "one is empty.");
 
-  
+
   endTest();
 #else
   testDisabled("BasicCopyTest");
@@ -236,12 +237,12 @@ void moderateCopyTest() try {
 
   MyPriorityQueue<int,comp> one;
   for (size_t i = 0; i < 10; ++i)
-    one.push(i); 
+    one.push(i);
   for (size_t i = 0; i < 10; ++i)
     one.push(9 - i);
-  
+
   {
-    /* Create a clone of one and confirm that everything copied correctly. 
+    /* Create a clone of one and confirm that everything copied correctly.
      * This uses the copy constructor.
      */
     MyPriorityQueue<int,comp> clone = one;
@@ -257,7 +258,7 @@ void moderateCopyTest() try {
   checkCondition(one.size() == 20, "After destructor, one has original size.");
 
 
-  
+
    {
      /*Create a clone of one and confirm that everything copied correctly.
       * This uses the assignment operator.*/
@@ -317,6 +318,6 @@ int main() {
 #else
   cout << "Not all tests were run.  Enable the rest of the tests, then run again." << endl << endl;
 #endif
-  
+
   pressEnterToContinue();
 }
