@@ -1,26 +1,44 @@
-cmake_minimum_required(VERSION 3.26)
-project(boggle)
+cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_STANDARD 14)
+project(Boggle)
 
-# Include directories
-include_directories(lib/StanfordCPPLib)
-include_directories(lib/StanfordCPPLib/private)
-include_directories(res)
-include_directories(src)
+# Set the C++ standard
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Include QT
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
+# Add warning flags
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    add_compile_options(-Wreturn-type)
+endif()
 
-# Globbing for source files, headers and resources
-file(GLOB_RECURSE SOURCE_FILES "src/*.cpp" "lib/*.cpp")
-file(GLOB_RECURSE HEADER_FILES "src/*.h" "lib/*.h")
-#file(GLOB_RECURSE RESOURCE_FILES "res/*.dat")
+# Define the source files
+file(GLOB SOURCES "${CMAKE_SOURCE_DIR}/src/*.cpp" "${CMAKE_SOURCE_DIR}/lib/StanfordCPPLib/*.cpp")
+
+# Define the header files
+file(GLOB HEADERS "${CMAKE_SOURCE_DIR}/src/*.h" "${CMAKE_SOURCE_DIR}/lib/StanfordCPPLib/*.h")
 
 # Add the executable
-add_executable(boggle ${SOURCE_FILES} ${HEADER_FILES} ${RESOURCE_FILES})
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
-# Link Qt5 Widgets library
-target_link_libraries(boggle Qt5::Widgets)
+# Include directories
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/lib/StanfordCPPLib")
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/res/EnglishWords.dat DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
+# Define the files to copy
+set(FILES_TO_COPY "${CMAKE_SOURCE_DIR}/res/*" "${CMAKE_SOURCE_DIR}/lib/*.jar")
+
+# Define the destination directory
+set(DEST_DIR "${CMAKE_BINARY_DIR}")
+
+# Copy files
+foreach(FILE IN ${FILES_TO_COPY})
+    file(COPY ${FILE} DESTINATION ${DEST_DIR})
+endforeach()
+
+# Add custom target to ensure files are copied every time
+add_custom_target(copyResources ALL
+    COMMAND ${CMAKE_COMMAND} -E echo "Copying resources..."
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/res ${DEST_DIR}/res
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/lib ${DEST_DIR}/lib
+    COMMENT "Copying resources to build directory"
+)

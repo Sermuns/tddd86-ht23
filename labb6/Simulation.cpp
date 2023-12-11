@@ -1,6 +1,7 @@
 #include "Simulation.h"
 #include <algorithm>
 #include <cassert>
+#include "MyVector.h"
 
 #include <iostream>
 
@@ -54,8 +55,8 @@ void Simulation::harvestTonnageNow(unsigned target,  mt19937& generator){
     }
     allTheFish.clear();
     shuffle(stillAlive.begin(),stillAlive.end(),generator);
-    unsigned landing =0;
-    unsigned fish=0;
+    unsigned landing = 0;
+    unsigned fish = 0;
     for(; fish < stillAlive.size() && landing < target; ++fish){
         if(stillAlive[fish]->catchableNow(simulationTime)){
             //fish is large enough to be caught

@@ -19,10 +19,10 @@ const unsigned HARVEST_START= 1000;
 const unsigned HARVEST_PERIOD= 366;
 const unsigned MIN_CATCHABLE_AGE = 550;
 const unsigned MIN_KEPT_AGE = 600;
-const unsigned LANDING = 70000;
+const unsigned LANDING = 60000;
 
 // Simulation: duration and printing
-const unsigned SIMULATION_HORIZON=8000;
+const unsigned SIMULATION_HORIZON = 8000;
 const unsigned PRINT_PERIOD=20;
 
 

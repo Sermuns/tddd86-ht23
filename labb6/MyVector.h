@@ -34,7 +34,6 @@ public:
      */
     MyVector& operator =(const MyVector& other);
 
-
     void push_back(const T&);
 
     void pop_back();
@@ -53,11 +52,21 @@ public:
 
     unsigned size()const;
 
+    void incrementSize();
+
 private:
     T* storage;
     unsigned capacity = 1;
     unsigned numberOfElements = 0;
 };
+
+template<typename T>
+void MyVector<T>::incrementSize() {
+    numberOfElements += 1;
+    capacity += 1;
+
+}
+
 
 template<typename T>
 MyVector<T>::MyVector(){
@@ -159,5 +168,6 @@ template<typename T>
 T* MyVector<T>::end(){
     return storage + numberOfElements;
 }
+
 
 #endif // MY_VECTOR_H

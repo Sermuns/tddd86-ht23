@@ -7,7 +7,9 @@
 #ifndef MY_PRIORITY_QUEUE_H
 #define MY_PRIORITY_QUEUE_H
 
+#include <algorithm>
 #include "MyVector.h"
+#include <iostream>
 #include "MyException.h"
 #include <cmath>
 
@@ -120,7 +122,7 @@ private:
 template <typename T, typename C>
 MyPriorityQueue<T,C>::MyPriorityQueue(){
     vector_array = MyVector<T>();
-    strictly_larger_operator = C();
+    strictly_larger_operator =  C();
 }
 
 template <typename T, typename C>
