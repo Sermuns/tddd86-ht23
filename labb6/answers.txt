@@ -2,6 +2,7 @@
 allTheFish är en vector av fiskar som ska innehålla alla levande fiskar efter "harvestTonnageNow" har körts.
 Så alla funktioner allTheFish används i är harvestTonnageNow och destruktor.
 eventQueue används för att spara alla framtid händelser som ska ske till fiskarna i allTheFish.
+TODO: kolla efter minnesläckor med valgrind.
 
 2.Enligt vår experiment var (MIN_CATCHABLE_AGE, LANDING) = (350, 82000) eller (350, 80000) det maximala vi kunde få landing till utan att
 befolkningen dog ut. Detta är för att om vi sätter LANDING för högt så kommer det inte finnas tillräckligt med fiskar som kan fångas
