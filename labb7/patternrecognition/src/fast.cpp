@@ -97,7 +97,8 @@ int main(int argc, char *argv[]) {
                 // sort points by natural order
                 sort(pair.second.begin(), pair.second.end());
                 // render line segment from p to last point in vector
-                render_line(scene, points[i], pair.second.back());
+                Point& lastPoint = pair.second.back();
+                render_line(scene, p, lastPoint);
             }
         }
     }
