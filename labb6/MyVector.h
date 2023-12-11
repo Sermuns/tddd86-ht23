@@ -8,8 +8,6 @@
 #define MY_VECTOR_H
 
 #include "MyException.h"
-#include <ostream>
-#include <istream>
 #include <iostream>
 
 template <typename T>
@@ -17,12 +15,23 @@ class MyVector
 {
 
 public:
+    /**
+     * @brief MyVector, constructor of array.
+     */
     MyVector();
 
     ~MyVector();
-
+    /**
+     * @brief MyVector copy contstructor that deep copies the given array.
+     * @param other "Myvector"
+     */
     MyVector(const MyVector& other);
 
+    /**
+     * @brief operator =
+     * @param other
+     * @return
+     */
     MyVector& operator =(const MyVector& other);
 
     void push_back(const T&);
@@ -46,13 +55,9 @@ public:
     void incrementSize();
 
 private:
-
-    // private members?
-
-    unsigned numberOfElements; // how much of the vector that is ACTUALLY full.
-    unsigned capacity; //
-    T* elements; //template
-
+    T* storage;
+    unsigned capacity = 1;
+    unsigned numberOfElements = 0;
 };
 
 template<typename T>
@@ -65,90 +70,74 @@ void MyVector<T>::incrementSize() {
 
 template<typename T>
 MyVector<T>::MyVector(){
-
-    capacity = 1;
-    numberOfElements = 0;
-    elements = new T[capacity]; // for fishes :D
-
+  storage = new T[capacity];
 }
 
 template<typename T>
 MyVector<T>::~MyVector(){
-    //Delete all fishes :D
-    for(unsigned i = 0; i < numberOfElements; i++){
-        elements[i].~T();
-    }
-    delete[] elements;
+    delete[] storage;
 }
 
 template<typename T>
 MyVector<T>::MyVector(const MyVector& other){
-    if(this == &other) return; // prevent self copy
 
-    numberOfElements = other.numberOfElements;
-    capacity = other.capacity;
-    elements = new T[capacity];
-
-    // Deep copy -_- zZzZzZ
-    for(int i = 0; i < other.numberOfElements; i++){
-        elements[i] = T(other.elements[i]);
+    this->capacity = other.capacity;
+    this->numberOfElements = other.numberOfElements;
+    storage = new T[capacity];
+    for(unsigned i = 0; i < other.numberOfElements; i++){
+       storage[i] = other.storage[i];
     }
 }
 
+
 template<typename T>
 MyVector<T>& MyVector<T>::operator =(const MyVector& other){
-    if(this != &other){
-        numberOfElements = other.numberOfElements;
-        capacity = other.capacity;
-        elements = new T[capacity];
+    if(other.storage == this->storage) return *this;
 
-        // Deep copy -_- zZzZzZ
-        for(int i = 0; i < other.numberOfElements; i++){
-            elements[i] = other.elements[i];
-        }
+
+    delete [] storage;
+    this->capacity = other.capacity;
+    this->numberOfElements = other.numberOfElements;
+    storage = new T[other.capacity];
+    for(unsigned i = 0; i < other.numberOfElements; i++){
+       storage[i] = other.storage[i];
     }
+
     return *this;
 }
 
 template<typename T>
 void MyVector<T>::push_back(const T& e){
-    if(numberOfElements > capacity) MYEXCEPTION("MORE ELEMENTS THAN CAPACITY");
-    capacity += 1;
-    T* tempElements = new T[capacity];
+    if(numberOfElements == capacity) {
+    capacity = capacity * 2;
+    T* tempStorage = new T[capacity];
 
-    for(int i = 0; i < numberOfElements; i++){
-        tempElements[i] = elements[i];
+    for(unsigned i = 0; i < numberOfElements; i++){
+        tempStorage[i] = storage[i];
     }
-    delete[] elements;
-    elements = tempElements;
+    delete[] storage;
+    storage = tempStorage;
+    }
 
-    elements[numberOfElements] = e; // last element
-    numberOfElements += 1;
+    storage[numberOfElements] = e;
+    numberOfElements++;
+
+
 }
 
 template<typename T>
 void MyVector<T>::pop_back(){
-    //element is still there :(( maybe ok? maybe not.... :/
-    if(numberOfElements == 0) MYEXCEPTION("EMPTY VECTOR");
-
-    elements[numberOfElements - 1].~T();
-    numberOfElements -= 1;
+    numberOfElements--;
 }
 
 template<typename T>
 T& MyVector<T>::operator[](unsigned i){
-    if (i >= numberOfElements)
-        MYEXCEPTION("OUT OF BOUNDS");
-
-    return elements[i];
+    return storage[i];
 }
 
 template<typename T>
-const T& MyVector<T>::operator[](unsigned i) const {
-    if (i >= numberOfElements)
-        MYEXCEPTION("OUT OF BOUNDS");
-
-    return elements[i];
+const T& MyVector<T>::operator[](unsigned i)const{
+    return storage[i];
 }
 
 template<typename T>
@@ -158,10 +147,11 @@ bool MyVector<T>::empty()const{
 
 template<typename T>
 void MyVector<T>::clear(){
-    for(int i = 0; i < numberOfElements; i++) {
-        elements[i].~T();
-    }
+    delete[] storage;
+
     numberOfElements = 0;
+    capacity = 1;
+    storage = new T[capacity];
 }
 
 template<typename T>
@@ -171,12 +161,12 @@ unsigned MyVector<T>::size()const{
 
 template<typename T>
 T* MyVector<T>::begin(){
-    return elements;
+    return storage;
 }
 
 template<typename T>
 T* MyVector<T>::end(){
-    return elements + numberOfElements;
+    return storage + numberOfElements;
 }
 
 
