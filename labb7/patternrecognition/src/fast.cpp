@@ -10,6 +10,7 @@
 #include <fstream>
 #include <iostream>
 #include <algorithm>
+#include <unordered_map>
 #include <vector>
 #include <chrono>
 #include "Point.h"
@@ -18,13 +19,13 @@
 static const int SCENE_WIDTH = 512;
 static const int SCENE_HEIGHT = 512;
 
-void render_points(QGraphicsScene* scene, const vector<Point>& points) {
-    for(const auto& point : points) {
+void render_points(QGraphicsScene *scene, const vector<Point> &points) {
+    for (const auto &point: points) {
         point.draw(scene);
     }
 }
 
-void render_line(QGraphicsScene* scene, const Point& p1, const Point& p2) {
+void render_line(QGraphicsScene *scene, const Point &p1, const Point &p2) {
     p1.lineTo(scene, p2);
 }
 
@@ -65,7 +66,7 @@ int main(int argc, char *argv[]) {
     render_points(scene, points);
     view->scale(1, -1); //screen y-axis is inverted
     view->resize(view->sizeHint());
-    view->setWindowTitle("Brute Force Pattern Recognition");
+    view->setWindowTitle("Fast Sorting Pattern Recognition");
     view->show();
 
     // sort points by natural order
@@ -73,22 +74,34 @@ int main(int argc, char *argv[]) {
     sort(points.begin(), points.end());
     auto begin = chrono::high_resolution_clock::now();
 
-    // iterate through all combinations of 4 points
-    for (int i = 0 ; i < N-3 ; ++i) {
-        for (int j = i+1 ; j < N-2 ; ++j) {
-            for (int k = j+1 ; k < N-1 ; ++k) {
-                //only consider fourth point if first three are collinear
-                if (points.at(i).slopeTo(points.at(j)) == points.at(i).slopeTo(points.at(k))) {
-                    for (int m{k+1} ; m < N ; ++m) {
-                        if (points.at(i).slopeTo(points.at(j)) == points.at(i).slopeTo(points.at(m))) {
-                            render_line(scene, points.at(i), points.at(m));
-                            a.processEvents(); // show rendered line
-                        }
-                    }
-                }
+    // find all 4 (or more) points which lie on the same straight line
+    // to do this, we iterate through all points p.
+    // for each point p, we sort the other points by their slope to p.
+
+    for (int i = 0; i < N; ++i) {
+        Point &p = points[i];
+        // map slope to vector of points with that slope
+        unordered_map<double, vector<Point>> slope_map;
+        // iterate through all points except p
+        for (int j = 0; j < N; ++j) {
+            if (i == j) continue; // skip self
+            Point &q = points[j];
+            double slope = p.slopeTo(q);
+            // add q to vector of points with that slope
+            slope_map[slope].push_back(q);
+        }
+        // iterate through all slopes
+        for (auto &pair: slope_map) {
+            // if there are 3 or more points with the same slope to p
+            if (pair.second.size() >= 3) {
+                // sort points by natural order
+                sort(pair.second.begin(), pair.second.end());
+                // render line segment from p to last point in vector
+                render_line(scene, points[i], pair.second.back());
             }
         }
     }
+
 
     auto end = chrono::high_resolution_clock::now();
     cout << "Computing line segments took "
