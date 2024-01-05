@@ -14,7 +14,10 @@ file(GLOB SRC_SOURCES src/*.cpp src/*.h)
 add_executable(trailblazer ${LIB_SOURCES} ${SRC_SOURCES})
 
 # Copy resources to build directory
-file(GLOB_RECURSE res_files res/*.txt)
+file(GLOB_RECURSE res_files res/*)
 foreach(file ${res_files})
     configure_file(${file} ${CMAKE_CURRENT_BINARY_DIR}/ COPYONLY)
 endforeach()
+
+# Copy spl.jar from lib to build directory
+configure_file(lib/spl.jar ${CMAKE_CURRENT_BINARY_DIR}/ COPYONLY)
