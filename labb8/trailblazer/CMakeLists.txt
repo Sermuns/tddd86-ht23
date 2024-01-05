@@ -12,3 +12,9 @@ file(GLOB LIB_SOURCES lib/StanfordCPPLib/*.cpp lib/StanfordCPPLib/*.h lib/Stanfo
 file(GLOB SRC_SOURCES src/*.cpp src/*.h)
 
 add_executable(trailblazer ${LIB_SOURCES} ${SRC_SOURCES})
+
+# Copy resources to build directory
+file(GLOB_RECURSE res_files res/*.txt)
+foreach(file ${res_files})
+    configure_file(${file} ${CMAKE_CURRENT_BINARY_DIR}/ COPYONLY)
+endforeach()
