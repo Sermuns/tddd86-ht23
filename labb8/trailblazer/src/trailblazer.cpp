@@ -5,6 +5,11 @@
 
 #include "costs.h"
 #include "trailblazer.h"
+#include <cassert>
+#include <iostream>
+#include <pqueue.h>
+#include <queue>
+
 // TODO: include any other headers you need; remove this comment
 using namespace std;
 
