@@ -1,5 +1,6 @@
 QT += widgets
 SOURCES = $$PWD/src/*.cpp
+#SOURCES += $$PWD/src/Point.cpp
 #SOURCES += $$PWD/lib/*.cpp
 HEADERS = $$PWD/src/*.h
 #HEADERS += $$PWD/lib/*.h

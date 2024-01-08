@@ -1,7 +1,6 @@
-/*
- * TDDD86 Pattern Recognition
- * This program computes and plots all line segments involving 4 points
- * in a file using Qt.
+/* Lab 7 done by Samuel Åkesson och Daniel Alchasov.
+ *
+ *
  */
 
 #include <QApplication>
@@ -29,11 +28,17 @@ void render_line(QGraphicsScene *scene, const Point &p1, const Point &p2) {
     p1.lineTo(scene, p2);
 }
 
+/**
+ * @brief main, renders a line between points by getting slopes and connecting them.
+ * @param argc
+ * @param argv
+ * @return
+ */
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
     // open file
-    string filename = "input1600.txt";
+    string filename = "input56.txt";
     ifstream input;
     input.open(filename);
 

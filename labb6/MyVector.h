@@ -28,30 +28,57 @@ public:
     MyVector(const MyVector& other);
 
     /**
-     * @brief operator =
+     * @brief operator =, deep copy assignment operator :D
      * @param other
      * @return
      */
     MyVector& operator =(const MyVector& other);
-
+    /**
+     * @brief push_back amortized time complexity of a push back
+     */
     void push_back(const T&);
-
+    /**
+     * @brief pop_back, pops the last element of the vector.
+     */
     void pop_back();
-
+    /**
+     * @brief operator [], index operator, gets element
+     * @param i
+     * @return
+     */
     T& operator[](unsigned i);
-
+    /**
+     * @brief operator [] returns a const element at index.
+     * @param i
+     * @return
+     */
     const T& operator[](unsigned i)const;
-
+    /**
+     * @brief empty
+     * @return true if vector is empty
+     */
     bool empty()const;
-
+    /**
+     * @brief begin
+     * @return pointer to start of array
+     */
     T* begin();
-
+    /**
+     * @brief end
+     * @return pointer to the end of the array
+     */
     T* end();
-
+    /**
+     * @brief clear, clears the entire vector
+     */
     void clear();
-
+    /**
+     * @brief size, return number of elements.
+     */
     unsigned size()const;
-
+    /**
+     * @brief incrementSize, increments the size of the myvector :D
+     */
     void incrementSize();
 
 private:
@@ -109,14 +136,14 @@ MyVector<T>& MyVector<T>::operator =(const MyVector& other){
 template<typename T>
 void MyVector<T>::push_back(const T& e){
     if(numberOfElements == capacity) {
-    capacity = capacity * 2;
-    T* tempStorage = new T[capacity];
+        capacity = capacity * 2;
+        T* tempStorage = new T[capacity];
 
-    for(unsigned i = 0; i < numberOfElements; i++){
-        tempStorage[i] = storage[i];
-    }
-    delete[] storage;
-    storage = tempStorage;
+        for(unsigned i = 0; i < numberOfElements; i++){
+            tempStorage[i] = storage[i];
+        }
+        delete[] storage;
+        storage = tempStorage;
     }
 
     storage[numberOfElements] = e;
