@@ -6,7 +6,7 @@ Så alla funktioner allTheFish används i är harvestTonnageNow och destruktor.
 eventQueue används för att spara alla framtid händelser som ska ske för fiskarna.
 
 2.
-Enligt vår experiment var (MIN_CATCHABLE_AGE, LANDING) = (350, 82000) eller (350, 80000) det maximala vi kunde få landing till utan att
+Enligt vår experiment var (MIN_CATCHABLE_AGE, LANDING) = (350, 82000) eller (350, 80000) eller (400 82000) det maximala vi kunde få landing till utan att
 befolkningen dog ut. Detta är för att om vi sätter LANDING för högt så kommer det inte finnas tillräckligt med fiskar som kan fångas
 eller om vi minskar MIN_CATCHABLE_AGE för mycket så kommer det inte finnas tillräckligt med fiskar som kan reproducera sig.
 
@@ -17,3 +17,6 @@ Detta gör så att programmet har inga memory leaks, och valgrind bekräftar det
 C)
 Med vår MyPriorityQueue tog simulationen ungefär 10 sekunder att köra.
 Med std::priority_queue tog det ungefär 20 sekunder.
+
+
+4. Having a method closer to constant time or constant makes the program run faster as in our case we got 20 s vs 13 s. The reason for this is we dont need to dynamically allocate memory to the vector.
