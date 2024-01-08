@@ -31,4 +31,4 @@
 
 Brute: O(N^4) - högst 4 nästlade for-loopar
 
-Sortering: O(N^2) - högst 2 nästlade for-loopar
+Sortering: O(N^2*log(N)) - högst 2 nästlade for-loopar
